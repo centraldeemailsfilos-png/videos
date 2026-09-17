@@ -1,0 +1,29 @@
+# segredos
+.env
+
+# material bruto e saídas de edição — pesados, ficam fora do git
+footage/*
+!footage/.gitkeep
+edit/*
+!edit/.gitkeep
+
+# mídia solta em qualquer lugar
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.wav
+*.mp3
+*.m4a
+*.aac
+!.claude/skills/**/*.mp4
+!.claude/skills/**/*.webm
+
+# node / python
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.uv/
