@@ -1,0 +1,94 @@
+{
+ "version": 1,
+ "sources": {
+  "V1": "/home/user/videos/footage/V1.mp4",
+  "V2": "/home/user/videos/footage/V2.mp4",
+  "V3": "/home/user/videos/footage/V3.mp4",
+  "V4": "/home/user/videos/footage/V4.mp4",
+  "V5": "/home/user/videos/footage/V5.mp4"
+ },
+ "ranges": [
+  {
+   "source": "V1",
+   "start": 0.0,
+   "end": 3.44,
+   "beat": "GANCHO",
+   "reason": "fala direta a camera, traz o livro no fim; pausa interna mantida (ela alcanca o livro)"
+  },
+  {
+   "source": "V4",
+   "start": 0.0,
+   "end": 1.95,
+   "beat": "PONTE",
+   "reason": "livro no colo, olhar a camera; 0.30s de cauda morta removidos"
+  },
+  {
+   "source": "V5",
+   "start": 1.43,
+   "end": 8.85,
+   "beat": "CAPA",
+   "reason": "melhor tomada da capa completa; 1.43s de cabeca e 0.81s de cauda mortas removidos"
+  },
+  {
+   "source": "V2",
+   "start": 0.0,
+   "end": 25.55,
+   "beat": "MIOLO 1",
+   "reason": "abre o livro e mostra paginas ilustradas"
+  },
+  {
+   "source": "V2",
+   "start": 26.42,
+   "end": 38.1,
+   "beat": "MIOLO 1",
+   "reason": "continuacao; pausa morta de 1.05s fechada"
+  },
+  {
+   "source": "V3",
+   "start": 0.15,
+   "end": 17.43,
+   "beat": "MIOLO 2",
+   "reason": "segue a apresentacao"
+  },
+  {
+   "source": "V3",
+   "start": 18.36,
+   "end": 33.48,
+   "beat": "MIOLO 2",
+   "reason": "pausa morta de 1.11s fechada"
+  },
+  {
+   "source": "V3",
+   "start": 34.33,
+   "end": 36.29,
+   "beat": "MIOLO 2",
+   "reason": "pausa morta de 1.03s fechada"
+  },
+  {
+   "source": "V3",
+   "start": 37.44,
+   "end": 41.0,
+   "beat": "FECHO",
+   "reason": "ultimas falas; pausa morta de 1.33s fechada e 0.70s de cauda removidos"
+  }
+ ],
+ "grade": "neutral_punch",
+ "overlays": [
+  {
+   "file": "/home/user/videos/edit/animations/slot_1/render.mov",
+   "start_in_output": 0.35,
+   "duration": 3.0
+  },
+  {
+   "file": "/home/user/videos/edit/animations/slot_2/render.mov",
+   "start_in_output": 7.0,
+   "duration": 3.5
+  },
+  {
+   "file": "/home/user/videos/edit/animations/slot_3/render.mov",
+   "start_in_output": 83.9,
+   "duration": 4.0
+  }
+ ],
+ "total_duration_s": 87.96
+}

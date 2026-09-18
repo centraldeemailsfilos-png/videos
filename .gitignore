@@ -6,6 +6,13 @@ footage/*
 !footage/.gitkeep
 edit/*
 !edit/.gitkeep
+# decisoes de corte e memoria do projeto sao versionadas (leves e valiosas);
+# a midia nao
+!edit/project.md
+!edit/edl.json
+!edit/analysis
+edit/analysis/*
+!edit/analysis/*.json
 
 # mídia solta em qualquer lugar
 *.mp4

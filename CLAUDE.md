@@ -62,6 +62,26 @@ python3 $H/pack_transcripts.py --edit-dir edit/
 python3 $H/render.py edit/edl.json -o edit/preview.mp4 --preview
 ```
 
+Duas ressalvas do `timeline_view.py`: passe **sempre** `-o edit/verify/...`, senão
+ele escreve dentro de `footage/` e suja o material bruto; e não use um `end` igual
+à duração exata do arquivo — o último frame não existe e ele quebra com
+`FileNotFoundError`. Use um valor um pouco menor.
+
+## Sem ASR neste ambiente
+
+O proxy de saída nega `api.elevenlabs.io` (403 no CONNECT), Hugging Face, os
+releases do GitHub e `alphacephei.com`. Passam só PyPI, npm e
+`raw.githubusercontent.com` — dá para instalar as bibliotecas de ASR, mas **não os
+pesos dos modelos**. Ou seja: uma `ELEVENLABS_API_KEY` não resolve, e whisper
+local também não. Sem transcrição não há legenda, corte de filler por palavra nem
+escolha de tomada por conteúdo.
+
+O caminho que funciona é **detecção de atividade de fala** com librosa (RMS de
+10ms, limiar adaptativo sobre o piso de ruído), que dá bordas de corte reais a
+partir do áudio. Veja `edit/analysis/speech.json` e a sessão 1 de
+`edit/project.md` para o método e os parâmetros já validados. Se a pessoa colar o
+roteiro, dá para alinhar aos blocos de fala e recuperar legendas.
+
 ## Cold start
 
 O container é efêmero. No início de cada sessão, verifique — não reinstale o que
@@ -170,7 +190,27 @@ sobrepostas de tela inteira e o `check` acusa `content_overlap`. O padrão certo
 </div>
 ```
 
-**3. Rode `check` antes de renderizar.** `npx --yes hyperframes check .` roda
+**3. Alpha em WebM não chega no ffmpeg — converta para ProRes 4444.** O
+HyperFrames renderiza WebM/VP9 guardando o alpha num canal lateral do Matroska
+(`BlockAdditional`). O decoder `vp9` nativo do ffmpeg **não lê esse canal**:
+`ffprobe` reporta `yuv420p` e, como o `render.py` abre overlays com `-i` simples,
+o overlay entra como **retângulo preto** por cima do vídeo. Não é defeito do
+render — nenhum WebM com alpha vai reportar `yuva420p` aqui. Converta antes de
+compor e aponte o EDL para o `.mov`:
+
+```bash
+ffmpeg -vcodec libvpx-vp9 -i render.webm \
+       -c:v prores_ks -profile:v 4444 -pix_fmt yuva444p10le render.mov
+```
+
+O `.mov` lê `yuva444p12le` nativamente e compõe com transparência correta.
+
+**4. Nada de `<link>` do Google Fonts no HTML do slot.** O proxy quebra o TLS da
+folha de estilo e o `check` falha com `ERR_CERT_AUTHORITY_INVALID`. Declare só o
+`font-family` — o compilador do HyperFrames busca a fonte server-side e injeta
+`@font-face` determinístico sozinho.
+
+**5. Rode `check` antes de renderizar.** `npx --yes hyperframes check .` roda
 lint, runtime, layout, motion e contraste de uma vez — pega sobreposição, texto
 ilegível e conflito entre CSS `transform` e tween do GSAP antes de você gastar um
 render.
