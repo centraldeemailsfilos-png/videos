@@ -133,7 +133,32 @@ FM
   rm -rf "$TMP_GIST"
 fi
 
-# --- 8. diretórios de trabalho ---
+# --- 8. skill global watch (opcional) ---
+WATCH_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/watch"
+WATCH_REPO="https://github.com/bradautomates/claude-video.git"
+if [ -f "$WATCH_DIR/SKILL.md" ]; then
+  ok "skill global watch"
+elif [ "$CHECK_ONLY" = 1 ]; then
+  warn "skill watch ausente (opcional; rode sem --check para instalar)"
+elif ! command -v git >/dev/null; then
+  warn "git ausente — skill watch não instalada"
+else
+  TMP_WATCH="$(mktemp -d)"
+  if git clone --depth 1 -q "$WATCH_REPO" "$TMP_WATCH/repo" 2>/dev/null \
+     && [ -f "$TMP_WATCH/repo/skills/watch/SKILL.md" ]; then
+    mkdir -p "$(dirname "$WATCH_DIR")"
+    rm -rf "$WATCH_DIR"
+    # A pasta skills/watch/ é autocontida (SKILL.md + scripts/); o SKILL.md
+    # resolve os scripts a partir do próprio caminho, então copiar basta.
+    cp -R "$TMP_WATCH/repo/skills/watch" "$WATCH_DIR"
+    ok "skill global watch instalada"
+  else
+    warn "não consegui clonar $WATCH_REPO — skill watch não instalada"
+  fi
+  rm -rf "$TMP_WATCH"
+fi
+
+# --- 9. diretórios de trabalho ---
 mkdir -p "$REPO_ROOT/footage" "$REPO_ROOT/edit"
 ok "footage/ e edit/ prontos"
 
