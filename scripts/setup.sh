@@ -100,7 +100,40 @@ else
   bad "helpers do video-use não rodam (deps python faltando?)"
 fi
 
-# --- 7. diretórios de trabalho ---
+# --- 7. skill global remotion-api-reference (opcional) ---
+SKILL_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/remotion-api-reference"
+GIST_ID="3d446e7c7aa9eb94f468194deb73028f"
+GIST_FILE="Remotion Claude.MD"
+if [ -f "$SKILL_DIR/SKILL.md" ]; then
+  ok "skill global remotion-api-reference"
+elif [ "$CHECK_ONLY" = 1 ]; then
+  warn "skill remotion-api-reference ausente (opcional; rode sem --check para instalar)"
+elif ! command -v git >/dev/null; then
+  warn "git ausente — skill remotion-api-reference não instalada"
+else
+  # O raw (gist.githubusercontent.com) é bloqueado pelo proxy de saída deste
+  # ambiente; o clone por gist.github.com passa e traz o markdown intacto.
+  TMP_GIST="$(mktemp -d)"
+  if git clone --depth 1 -q "https://gist.github.com/$GIST_ID.git" "$TMP_GIST/gist" 2>/dev/null \
+     && [ -f "$TMP_GIST/gist/$GIST_FILE" ]; then
+    mkdir -p "$SKILL_DIR"
+    cat > "$SKILL_DIR/SKILL.md" <<'FM'
+---
+name: remotion-api-reference
+description: Remotion API reference for building video apps in React — Composition/Root.tsx setup, OffthreadVideo/Img/Gif/Audio/staticFile, AbsoluteFill, Sequence, Series, TransitionSeries, interpolate(), spring(), random(), useCurrentFrame(), useVideoConfig(), and the rules that make Remotion components deterministic and frame-driven instead of interactive. Use when writing, reviewing or debugging Remotion compositions.
+---
+
+FM
+    sed "1s|^# CLAUDE.md\$|# Remotion (guia de referência)\n\n> Fonte: gist \`ThariqS/$GIST_ID\` (\`$GIST_FILE\`).|" \
+      "$TMP_GIST/gist/$GIST_FILE" >> "$SKILL_DIR/SKILL.md"
+    ok "skill global remotion-api-reference instalada"
+  else
+    warn "não consegui clonar o gist $GIST_ID — skill remotion-api-reference não instalada"
+  fi
+  rm -rf "$TMP_GIST"
+fi
+
+# --- 8. diretórios de trabalho ---
 mkdir -p "$REPO_ROOT/footage" "$REPO_ROOT/edit"
 ok "footage/ e edit/ prontos"
 
