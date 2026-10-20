@@ -40,3 +40,10 @@ edit/angola/*
 edit/angola/analysis/*
 !edit/angola/analysis/*.json
 !edit/angola/project.md
+!edit/angola/animations
+edit/angola/animations/*
+!edit/angola/animations/p3_trajetoria
+!edit/angola/animations/p6_maes
+edit/angola/animations/p3_trajetoria/*
+edit/angola/animations/p6_maes/*
+!edit/angola/animations/*/index.html
