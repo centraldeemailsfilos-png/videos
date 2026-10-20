@@ -34,3 +34,9 @@ __pycache__/
 .venv/
 venv/
 .uv/
+!edit/angola
+edit/angola/*
+!edit/angola/analysis
+edit/angola/analysis/*
+!edit/angola/analysis/*.json
+!edit/angola/project.md
