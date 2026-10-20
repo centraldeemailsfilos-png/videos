@@ -196,11 +196,15 @@
     <script>
       const tl = gsap.timeline({ paused: true });
 
-      /* ---------- Parte 1 — entradas escalonadas ---------- */
-      const T0 = 0.35;
-      const STEP = 1.55;
+      /* ---------- Parte 1 — entradas cravadas na narracao ----------
+         Tempos tirados do alinhamento palavra a palavra do audio real.
+         Cada icone comeca 0.6s antes da palavra, que e a duracao da entrada,
+         para o frame de chegada cair exatamente em cima dela.
+           "ler/escrever" 4.56 | "ingles" 6.50 | "musica" 7.28
+           "artes" 8.00        | "esportes" 9.23                        */
+      const ENTRADAS = [3.96, 5.90, 6.68, 7.40, 8.63];
       for (let i = 0; i < 5; i++) {
-        const t = T0 + i * STEP;
+        const t = ENTRADAS[i];
         tl.fromTo(
           "#ico-" + i,
           { opacity: 0, y: 26, scale: 0.8 },
@@ -211,7 +215,7 @@
           "#lbl-" + i,
           { opacity: 0, y: 16 },
           { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
-          t + 0.2
+          t + 0.18
         );
       }
 
@@ -219,7 +223,7 @@
       tl.to(
         ".ico, .lbl",
         { opacity: 0, y: -20, duration: 0.8, ease: "power2.inOut" },
-        10.3
+        10.95
       );
 
       /* ---------- Parte 2 — blocos entram juntos ---------- */
@@ -227,7 +231,7 @@
         ".stat",
         { opacity: 0, y: 22 },
         { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-        11.2
+        11.45
       );
 
       /* ---------- Parte 2 — contagem ---------- */
@@ -251,7 +255,7 @@
               el.textContent = c.fmt(Math.round(o.v));
             }
           },
-          11.8
+          11.95
         );
       });
 
@@ -260,7 +264,7 @@
         "#frase",
         { opacity: 0, y: 18 },
         { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-        14.9
+        15.10
       );
 
       window.__timelines["main"] = tl;

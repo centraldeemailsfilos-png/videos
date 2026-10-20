@@ -222,92 +222,92 @@
         { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
         0.3
       );
-      tl.to("#abertura", { opacity: 0, y: -18, duration: 0.8, ease: "power2.inOut" }, 3.00);
+      tl.to("#abertura", { opacity: 0, y: -18, duration: 0.8, ease: "power2.inOut" }, 1.70);
 
       /* ---- batida 1: A / Aprender ---- */
       tl.fromTo(
         "#letra-a",
         { opacity: 0, y: -260, scale: 1.25 },
         { opacity: 1, y: 0, scale: 1, duration: 0.52, ease: "back.out(2.2)" },
-        3.60
+        2.14
       );
       tl.fromTo(
         "#palavra-a",
         { opacity: 0, scale: 0.9 },
         { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" },
-        3.60
+        2.14
       );
-      tl.to("#palavra-a", { opacity: 0, duration: 0.25, ease: "power2.in" }, 4.05);
+      tl.to("#palavra-a", { opacity: 0, duration: 0.25, ease: "power2.in" }, 2.48);
 
       /* ---- batida 2: B / Brincar ---- */
       tl.fromTo(
         "#letra-b",
         { opacity: 0, y: 120, scale: 0.8 },
         { opacity: 1, y: 0, scale: 1, duration: 0.52, ease: "back.out(2.6)" },
-        4.15
+        2.58
       );
       tl.fromTo(
         "#palavra-b",
         { opacity: 0, scale: 0.9 },
         { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" },
-        4.15
+        2.58
       );
-      tl.to("#palavra-b", { opacity: 0, duration: 0.25, ease: "power2.in" }, 4.65);
+      tl.to("#palavra-b", { opacity: 0, duration: 0.25, ease: "power2.in" }, 2.91);
 
       /* ---- batida 3: C / Crescer ---- */
       tl.fromTo(
         "#letra-c",
         { opacity: 0, y: 200, scale: 0.85 },
         { opacity: 1, y: 0, scale: 1, duration: 0.52, ease: "back.out(2.2)" },
-        4.75
+        3.01
       );
       tl.fromTo(
         "#palavra-c",
         { opacity: 0, scale: 0.9 },
         { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" },
-        4.75
+        3.01
       );
-      tl.to("#palavra-c", { opacity: 0, y: -12, duration: 0.7, ease: "power2.inOut" }, 5.50);
+      tl.to("#palavra-c", { opacity: 0, y: -12, duration: 0.7, ease: "power2.inOut" }, 3.80);
 
       /* ---- a logo se completa ---- */
       // aproximacao nas batidas: o A, o B e o C entram grandes e a camera abre
       // conforme a logo se completa. Origem no centro do bloco ABC.
       gsap.set("#logo", { transformOrigin: "48.5% 75.4%" });
       tl.set("#logo", { scale: 2.6 }, 0);
-      tl.to("#logo", { scale: 1, duration: 2.0, ease: "power2.inOut" }, 5.60);
+      tl.to("#logo", { scale: 1, duration: 2.0, ease: "power2.inOut" }, 3.40);
 
       tl.fromTo(
         "#filos",
         { opacity: 0, y: -90 },
         { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
-        6.80
+        4.60
       );
       tl.fromTo(
         "#emblema",
         { opacity: 0, scale: 0.88, rotation: -3 },
         { opacity: 1, scale: 1, rotation: 0, duration: 1.2, ease: "power3.out" },
-        7.90
+        5.70
       );
       tl.fromTo(
         "#tagline",
         { opacity: 0, y: 14 },
         { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-        9.30
+        7.10
       );
       tl.fromTo(
         "#instituto",
         { opacity: 0, y: 12 },
         { opacity: 1, y: 0, duration: 0.9, ease: "power2.out" },
-        10.30
+        8.10
       );
-      tl.fromTo("#editora", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 11.20);
+      tl.fromTo("#editora", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 9.00);
 
       /* ---- fecho ---- */
       tl.fromTo(
         "#fecho",
         { opacity: 0, y: 14 },
         { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-        15.00
+        14.20
       );
 
       window.__timelines["main"] = tl;
