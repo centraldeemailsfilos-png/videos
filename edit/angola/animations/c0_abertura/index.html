@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Filos ABC — Abertura</title>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000000;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000000;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      #palco {
+        background: #000000;
+      }
+
+      /* ---- caixas de logo: posicionadas por calc, sem transform no CSS ---- */
+      .logo-wrap {
+        position: absolute;
+        opacity: 0;
+        will-change: opacity, transform;
+      }
+      /* Editora: 4294x2200 -> 1150 x 589.2 */
+      #ed-wrap {
+        width: 1150px;
+        height: 589.2px;
+        left: calc(50% - 575px);
+        top: calc(50% - 294.6px);
+      }
+      /* ABC: 1811x2491 -> 450.8 x 620 */
+      #abc-wrap {
+        width: 450.8px;
+        height: 620px;
+        left: calc(50% - 225.4px);
+        top: calc(50% - 310px);
+      }
+      .logo-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      /* ---- brilho: faixa diagonal recortada pelo alpha da propria logo ---- */
+      .shine-mask {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        mask-repeat: no-repeat;
+        mask-size: 100% 100%;
+        mask-position: center;
+        mask-mode: alpha;
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: 100% 100%;
+        -webkit-mask-position: center;
+      }
+      #ed-shine-mask {
+        mask-image: url("./assets/editora.png");
+        -webkit-mask-image: url("./assets/editora.png");
+      }
+      #abc-shine-mask {
+        mask-image: url("./assets/abc.png");
+        -webkit-mask-image: url("./assets/abc.png");
+      }
+      .shine-band {
+        position: absolute;
+        left: 0;
+        top: -45%;
+        height: 190%;
+        width: 300px;
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.14) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        will-change: transform;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-width="1920"
+      data-height="1080"
+      data-duration="10"
+      data-fps="30"
+    >
+      <div id="palco" class="clip" data-start="0" data-duration="10" data-track-index="0">
+        <div id="ed-wrap" class="logo-wrap">
+          <img id="ed-img" class="logo-img" src="./assets/editora.png" alt="Filos Editora" />
+          <div id="ed-shine-mask" class="shine-mask" data-layout-allow-overflow="true">
+            <div id="ed-shine" class="shine-band"></div>
+          </div>
+        </div>
+
+        <div id="abc-wrap" class="logo-wrap">
+          <img id="abc-img" class="logo-img" src="./assets/abc.png" alt="Filos ABC — Instituto Filos" />
+          <div id="abc-shine-mask" class="shine-mask" data-layout-allow-overflow="true">
+            <div id="abc-shine" class="shine-band"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // 0.00 -> 0.70  Editora entra
+      tl.fromTo(
+        "#ed-wrap",
+        { opacity: 0, scale: 0.965 },
+        { opacity: 1, scale: 1, duration: 0.7, ease: "power2.out" },
+        0
+      );
+
+      // 0.70 -> 1.30  brilho atravessa a Editora
+      tl.fromTo(
+        "#ed-shine",
+        { x: -520, rotation: 16 },
+        { x: 1460, rotation: 16, duration: 0.6, ease: "power2.inOut" },
+        0.7
+      );
+
+      // 1.30 -> 3.50  parada
+
+      // 3.50 -> 4.10  Editora sai
+      tl.fromTo(
+        "#ed-wrap",
+        { opacity: 1, scale: 1 },
+        { opacity: 0, scale: 1.03, duration: 0.6, ease: "power2.inOut", immediateRender: false },
+        3.5
+      );
+
+      // 4.10 -> 4.85  ABC entra
+      tl.fromTo(
+        "#abc-wrap",
+        { opacity: 0, scale: 0.965 },
+        { opacity: 1, scale: 1, duration: 0.75, ease: "power3.out" },
+        4.1
+      );
+
+      // 4.85 -> 5.45  brilho atravessa o ABC
+      tl.fromTo(
+        "#abc-shine",
+        { x: -400, rotation: 16 },
+        { x: 800, rotation: 16, duration: 0.6, ease: "power2.inOut" },
+        4.85
+      );
+
+      // 5.45 -> 8.00  parada (narracao entra aos 5s)
+
+      // 8.00 -> 9.30  ABC esmaece
+      tl.fromTo(
+        "#abc-wrap",
+        { opacity: 1 },
+        { opacity: 0, duration: 1.3, ease: "power2.inOut", immediateRender: false },
+        8.0
+      );
+
+      // 9.30 -> 10.00  tela preta
+      tl.set({}, {}, 10);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

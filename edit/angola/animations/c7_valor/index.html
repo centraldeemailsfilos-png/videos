@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Filos ABC — Cena 7: quanto o projeto precisa por mês</title>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0e1013;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0e1013;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      #palco {
+        background: #0e1013;
+      }
+
+      /* ---------- bloco 1: o valor ---------- */
+      .linha {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+        will-change: opacity, transform;
+      }
+      #apoio {
+        top: 276px;
+        font-size: 40px;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+        color: #a8aeb6;
+      }
+      #valor {
+        top: 364px;
+        font-size: 190px;
+        font-weight: 700;
+        line-height: 0.8;
+        letter-spacing: -0.02em;
+        color: #f2efe9;
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+      }
+      #kz {
+        top: 534px;
+        font-size: 76px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: #fdb304;
+      }
+
+      /* ---------- bloco 2: os 4 destinos ---------- */
+      .destino {
+        position: absolute;
+        top: 744px;
+        width: 400px;
+        height: 152px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        opacity: 0;
+        will-change: opacity, transform;
+      }
+      #d1 {
+        left: 40px;
+      }
+      #d2 {
+        left: 520px;
+      }
+      #d3 {
+        left: 1000px;
+      }
+      #d4 {
+        left: 1480px;
+      }
+      .icone {
+        display: block;
+        width: 90px;
+        height: 90px;
+      }
+      .rotulo {
+        margin-top: 22px;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.25;
+        color: #f2efe9;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-width="1920"
+      data-height="1080"
+      data-duration="20"
+      data-fps="30"
+    >
+      <div id="palco" class="clip" data-start="0" data-duration="20" data-track-index="0">
+        <!-- bloco 1 -->
+        <div id="apoio" class="linha">O Filos ABC precisa por mês</div>
+        <div id="valor" class="linha">R$ 0</div>
+        <div id="kz" class="linha">2.700.000 Kz</div>
+
+        <!-- bloco 2 -->
+        <div id="d1" class="destino">
+          <svg class="icone" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+            <g>
+              <circle cx="45" cy="45" r="37" stroke="#FDB304" stroke-width="7" />
+              <circle cx="45" cy="45" r="21" stroke="#FDB304" stroke-width="5" />
+            </g>
+          </svg>
+          <div class="rotulo">Alimentação</div>
+        </div>
+
+        <div id="d2" class="destino">
+          <svg class="icone" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+            <g>
+              <path
+                d="M58 12 L78 32 L34 76 L14 80 L18 58 Z"
+                stroke="#057025"
+                stroke-width="7"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+              />
+              <path d="M48 22 L68 42" stroke="#057025" stroke-width="6" stroke-linecap="round" />
+            </g>
+          </svg>
+          <div class="rotulo">Material escolar</div>
+        </div>
+
+        <div id="d3" class="destino">
+          <svg class="icone" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+            <g>
+              <circle cx="45" cy="23" r="14" stroke="#E90404" stroke-width="7" />
+              <path
+                d="M16 78 C16 56 29 46 45 46 C61 46 74 56 74 78"
+                stroke="#E90404"
+                stroke-width="7"
+                stroke-linecap="round"
+              />
+            </g>
+          </svg>
+          <div class="rotulo">Profissionais</div>
+        </div>
+
+        <div id="d4" class="destino">
+          <svg class="icone" viewBox="0 0 90 90" fill="none" aria-hidden="true">
+            <g>
+              <path
+                d="M12 42 L45 14 L78 42"
+                stroke="#F2EFE9"
+                stroke-width="7"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+              />
+              <path
+                d="M22 42 L22 76 L68 76 L68 42"
+                stroke="#F2EFE9"
+                stroke-width="7"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+              />
+            </g>
+          </svg>
+          <div class="rotulo">Estrutura do prédio</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- formatação: ponto como separador de milhar, sempre "R$ x.xxx" ----
+      function moeda(n) {
+        var s = String(Math.round(n));
+        var out = "";
+        var c = 0;
+        for (var i = s.length - 1; i >= 0; i--) {
+          out = s.charAt(i) + out;
+          c++;
+          if (c % 3 === 0 && i > 0) out = "." + out;
+        }
+        return "R$ " + out;
+      }
+
+      var el = document.getElementById("valor");
+      el.textContent = moeda(0);
+
+      // 0.40 -> 1.10  linha de apoio entra
+      tl.fromTo(
+        "#apoio",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+        0.4
+      );
+
+      // 1.90 -> 6.40  o valor conta de R$ 0 ate R$ 15.000
+      var conta = { v: 0 };
+      tl.fromTo(
+        conta,
+        { v: 0 },
+        {
+          v: 15000,
+          duration: 4.5,
+          ease: "power2.out",
+          onUpdate: function () {
+            el.textContent = moeda(conta.v);
+          }
+        },
+        1.9
+      );
+      // o valor aparece junto com o inicio da contagem
+      tl.fromTo("#valor", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 1.9);
+
+      // 6.60 -> 7.40  o equivalente em kwanzas entra
+      tl.fromTo(
+        "#kz",
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+        6.6
+      );
+
+      // 7.40 -> 8.60  parada
+
+      // 9.00 / 10.55 / 12.10 / 13.65  os quatro destinos acendem um por vez
+      var destinos = ["#d1", "#d2", "#d3", "#d4"];
+      for (var k = 0; k < destinos.length; k++) {
+        tl.fromTo(
+          destinos[k],
+          { opacity: 0, y: 22, scale: 0.85 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" },
+          9.0 + k * 1.55
+        );
+      }
+
+      // 14.25 -> 20.00  tudo parado na tela
+      tl.set({}, {}, 20);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

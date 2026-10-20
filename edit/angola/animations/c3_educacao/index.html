@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Filos ABC — Cena 3 — Educação em primeiro lugar</title>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; overflow: hidden; background: #0E1013; }
+
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0E1013;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .clip { position: absolute; inset: 0; }
+
+      /* ---------- Parte 1 — os cinco icones ---------- */
+      #icons {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 395px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 80px;
+      }
+      .item {
+        width: 240px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .ico {
+        display: block;
+        width: 150px;
+        height: 150px;
+        opacity: 0;
+      }
+      .lbl {
+        margin-top: 24px;
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 1.2;
+        color: #F2EFE9;
+        white-space: nowrap;
+        opacity: 0;
+      }
+
+      /* ---------- Parte 2 — os tres contadores ---------- */
+      #stats {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 350px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 180px;
+      }
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+      }
+      .num {
+        font-size: 150px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .cap {
+        margin-top: 14px;
+        font-size: 34px;
+        font-weight: 500;
+        line-height: 1.2;
+        color: #A8AEB6;
+        white-space: nowrap;
+      }
+      #frase {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 660px;
+        text-align: center;
+        font-size: 54px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        color: #F2EFE9;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="18"
+      data-width="1920"
+      data-height="1080"
+      data-fps="30"
+    >
+      <div id="cena" class="clip" data-start="0" data-duration="18" data-track-index="0">
+
+        <!-- Parte 1 -->
+        <div id="icons">
+
+          <div class="item">
+            <svg class="ico" id="ico-0" viewBox="0 0 100 100" fill="none"
+                 stroke="#FDB304" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M50 30 C44 24 32 21 18 22 L18 70 C32 69 44 72 50 78" />
+              <path d="M50 30 C56 24 68 21 82 22 L82 70 C68 69 56 72 50 78" />
+              <path d="M50 30 V78" />
+            </svg>
+            <div class="lbl" id="lbl-0">Ler e escrever</div>
+          </div>
+
+          <div class="item">
+            <svg class="ico" id="ico-1" viewBox="0 0 100 100" fill="none"
+                 stroke="#057025" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M26 24 H74 A12 12 0 0 1 86 36 V60 A12 12 0 0 1 74 72 H48 L31 86 V72 H26 A12 12 0 0 1 14 60 V36 A12 12 0 0 1 26 24 Z" />
+            </svg>
+            <div class="lbl" id="lbl-1">Inglês</div>
+          </div>
+
+          <div class="item">
+            <svg class="ico" id="ico-2" viewBox="0 0 100 100" fill="none"
+                 stroke="#E90404" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M45 74 V24" />
+              <path d="M45 24 C62 27 73 35 73 48" />
+              <ellipse cx="31" cy="74" rx="14" ry="11" transform="rotate(-20 31 74)"
+                       fill="#E90404" stroke="none" />
+            </svg>
+            <div class="lbl" id="lbl-2">Música</div>
+          </div>
+
+          <div class="item">
+            <svg class="ico" id="ico-3" viewBox="0 0 100 100" fill="none"
+                 stroke="#FE8E04" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M50 14 V40" />
+              <path d="M32 42 H68 V58 H32 Z" />
+              <path d="M32 58 L40 88 H60 L68 58" />
+            </svg>
+            <div class="lbl" id="lbl-3">Artes</div>
+          </div>
+
+          <div class="item">
+            <svg class="ico" id="ico-4" viewBox="0 0 100 100" fill="none"
+                 stroke="#F2EFE9" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="50" cy="50" r="34" />
+              <path d="M50 36 L63.3 45.7 L58.2 61.3 L41.8 61.3 L36.7 45.7 Z" />
+              <path d="M50 36 V17" />
+              <path d="M63.3 45.7 L81.5 39.8" />
+              <path d="M58.2 61.3 L69.4 76.7" />
+              <path d="M41.8 61.3 L30.6 76.7" />
+              <path d="M36.7 45.7 L18.5 39.8" />
+            </svg>
+            <div class="lbl" id="lbl-4">Esportes</div>
+          </div>
+
+        </div>
+
+        <!-- Parte 2 -->
+        <div id="stats">
+          <div class="stat" id="stat-0">
+            <div class="num" id="num-0" style="color: #FDB304">+0</div>
+            <div class="cap">crianças</div>
+          </div>
+          <div class="stat" id="stat-1">
+            <div class="num" id="num-1" style="color: #057025">0</div>
+            <div class="cap">atividades</div>
+          </div>
+          <div class="stat" id="stat-2">
+            <div class="num" id="num-2" style="color: #E90404">0%</div>
+            <div class="cap">gratuito</div>
+          </div>
+        </div>
+
+        <div id="frase">Educação em primeiro lugar</div>
+
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      /* ---------- Parte 1 — entradas escalonadas ---------- */
+      const T0 = 0.35;
+      const STEP = 1.55;
+      for (let i = 0; i < 5; i++) {
+        const t = T0 + i * STEP;
+        tl.fromTo(
+          "#ico-" + i,
+          { opacity: 0, y: 26, scale: 0.8 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" },
+          t
+        );
+        tl.fromTo(
+          "#lbl-" + i,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          t + 0.2
+        );
+      }
+
+      /* ---------- Parte 1 — saida conjunta ---------- */
+      tl.to(
+        ".ico, .lbl",
+        { opacity: 0, y: -20, duration: 0.8, ease: "power2.inOut" },
+        10.3
+      );
+
+      /* ---------- Parte 2 — blocos entram juntos ---------- */
+      tl.fromTo(
+        ".stat",
+        { opacity: 0, y: 22 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+        11.2
+      );
+
+      /* ---------- Parte 2 — contagem ---------- */
+      const CONTADORES = [
+        { id: "num-0", alvo: 80, fmt: function (v) { return "+" + v; } },
+        { id: "num-1", alvo: 5, fmt: function (v) { return String(v); } },
+        { id: "num-2", alvo: 100, fmt: function (v) { return v + "%"; } }
+      ];
+      CONTADORES.forEach(function (c) {
+        const el = document.getElementById(c.id);
+        const o = { v: 0 };
+        tl.fromTo(
+          o,
+          { v: 0 },
+          {
+            v: c.alvo,
+            duration: 2.8,
+            ease: "power2.out",
+            immediateRender: false,
+            onUpdate: function () {
+              el.textContent = c.fmt(Math.round(o.v));
+            }
+          },
+          11.8
+        );
+      });
+
+      /* ---------- Parte 2 — frase ---------- */
+      tl.fromTo(
+        "#frase",
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+        14.9
+      );
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
