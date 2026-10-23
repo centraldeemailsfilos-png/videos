@@ -48,3 +48,11 @@ edit/angola/animations/*
 edit/angola/animations/*/*
 edit/angola/animations/_tpl/
 !edit/angola/animations/*/index.html
+
+# --- projeto filos: versiona o codigo das ferramentas e o json de analise ---
+!edit/filos
+edit/filos/*
+!edit/filos/tools
+edit/filos/tools/*
+!edit/filos/tools/*.py
+!edit/filos/*.json
