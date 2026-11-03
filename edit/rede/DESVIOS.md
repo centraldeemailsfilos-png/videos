@@ -61,9 +61,12 @@ mostrados.
   assinatura "Corrente 300". **Sem** moldura de rede social, contador de
   curtidas, nome de perfil ou selo de patrocinado, e **com** a palavra
   "Exemplo" em pílula tracejada e a nota "arte ilustrativa" abaixo.
-- **Trilha sonora.** Composta para este vídeo — fá maior, 68 bpm, sem
-  percussão, agudo cortado em 2,6 kHz. Não há o que licenciar. Fica 18,8 dB
-  abaixo da voz durante a fala e sobe nos intervalos.
+- **Trilha sonora: não há.** O roteiro (§7) pede música leve e sem letra.
+  Uma trilha original foi composta e descartada a pedido. O vídeo sai com
+  narração e os sons de toque; os intervalos são silêncio de verdade
+  (−84 dB). Para pôr outra faixa, basta deixar o WAV em
+  `edit/rede/trilha.wav` e montar com `--com-trilha` — o recuo sob a voz
+  já está aferido e continua no código.
 - **Sons de toque.** Sintetizados; 18 ocorrências, posicionadas nos
   instantes exatos registrados pelas gravações de tela.
 

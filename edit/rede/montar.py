@@ -8,12 +8,18 @@ para segurar no fim, entao segurar mais alguns quadros nao aparece.
 Montagem por segmento e concat de demuxer, nunca filtergraph em passe
 unico (Hard Rule 4 do video-use).
 
-  python3 edit/rede/montar.py            # final
-  python3 edit/rede/montar.py --leve     # versao leve para aprovacao
+  python3 edit/rede/montar.py                 # final
+  python3 edit/rede/montar.py --leve          # versao leve para aprovacao
+  python3 edit/rede/montar.py --com-trilha    # com a trilha de fundo
+
+Sem trilha por padrao: a pessoa ouviu a que eu compus e nao gostou. O
+caminho da trilha continua no codigo para quando houver outra faixa —
+basta pousar o WAV em edit/rede/trilha.wav e passar --com-trilha.
 """
 import json, os, subprocess, sys, shutil
 
-LEVE  = '--leve' in sys.argv
+LEVE    = '--leve' in sys.argv
+TRILHA  = '--com-trilha' in sys.argv
 DUR   = 247.69
 CENAS = json.load(open('edit/rede/align/alinhamento_final.json', encoding='utf-8'))['cenas']
 TMP   = 'edit/rede/_montagem'
@@ -102,25 +108,30 @@ subprocess.run(['ffmpeg','-v','error','-y','-f','concat','-safe','0','-i', lista
                 '-c','copy', mudo], check=True)
 print('\nvideo mudo: %.2fs' % dur(mudo))
 
-# --- som: narracao, trilha abaixada sob a voz, e os toques ---
-mistura = (
-  '[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,asplit=2[voz][chave];'
-  '[2:a]volume=0.65[mus];'
-  # A trilha recua sozinha quando ha voz, em vez de curva desenhada a mao.
-  # Aferido: 18,8 dB de voz sobre a trilha durante a fala e 7,1 dB de
-  # recuo, com a trilha subindo a -24,5 dB nos intervalos. Com 0.34 e
-  # ratio 9 ela ficava 28 dB abaixo — praticamente inaudivel.
-  '[mus][chave]sidechaincompress=threshold=0.040:ratio=6:attack=24:release=420:makeup=1[musd];'
-  '[3:a]volume=0.85[toq];'
-  '[voz][musd][toq]amix=inputs=3:normalize=0:dropout_transition=0[som];'
-  '[som]alimiter=limit=0.94,afade=t=in:st=0:d=0.5,'
-  'afade=t=out:st=%.2f:d=1.4[saida]' % (DUR - 1.4)
-)
-subprocess.run(['ffmpeg','-v','error','-y','-i', mudo,
-                '-i','edit/rede/narracao_enxuta.wav',
-                '-i','edit/rede/trilha.wav',
-                '-i','edit/rede/sons.wav',
-                '-filter_complex', mistura,
+# --- som: narracao e os toques; a trilha so entra se pedida ---
+entradas = ['-i', mudo, '-i', 'edit/rede/narracao_enxuta.wav', '-i', 'edit/rede/sons.wav']
+if TRILHA:
+    entradas += ['-i', 'edit/rede/trilha.wav']
+    mistura = (
+      '[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,asplit=2[voz][chave];'
+      '[3:a]volume=0.65[mus];'
+      # A trilha recua sozinha quando ha voz, em vez de curva desenhada a
+      # mao. Aferido: 18,8 dB de voz sobre a trilha durante a fala e
+      # 7,1 dB de recuo, com a trilha subindo a -24,5 dB nos intervalos.
+      '[mus][chave]sidechaincompress=threshold=0.040:ratio=6:attack=24:release=420:makeup=1[musd];'
+      '[2:a]volume=0.85[toq];'
+      '[voz][musd][toq]amix=inputs=3:normalize=0:dropout_transition=0[som];'
+    )
+else:
+    mistura = (
+      '[1:a]loudnorm=I=-16:TP=-1.5:LRA=11[voz];'
+      '[2:a]volume=0.85[toq];'
+      '[voz][toq]amix=inputs=2:normalize=0:dropout_transition=0[som];'
+    )
+mistura += ('[som]alimiter=limit=0.94,afade=t=in:st=0:d=0.5,'
+            'afade=t=out:st=%.2f:d=1.4[saida]' % (DUR - 1.4))
+subprocess.run(['ffmpeg','-v','error','-y'] + entradas +
+               ['-filter_complex', mistura,
                 '-map','0:v','-map','[saida]',
                 '-c:v','copy','-c:a','aac','-b:a','192k',
                 '-movflags','+faststart', SAIDA], check=True)
