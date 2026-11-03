@@ -129,6 +129,14 @@ export const TOMADAS = [
   /* ---------- G09  Escolinha em Angola  (cena 9, 22,46s) ----------
    * "vez," 10.25 | "valor" 11.77 | "apoiar" 13.57 | "escola" 19.55       */
   { id: 'G09', pagina: ANGOLA, endereco: E.angola, passos: [
+    /* Parte de "Uma vez / R$ 100". Sem isto a gravacao comeca ja em
+     * "Todo mes / R$ 20", que e o padrao do site, e os dois toques nao
+     * mudam nada na tela — o roteiro (§6) exige que a resposta do site
+     * apareca depois de cada toque.                                    */
+    { avaliar: () => {
+        document.querySelector('#tipo > button:nth-of-type(2)').click();
+        document.querySelector('#valores > button:nth-of-type(4)').click();
+      }, rotulo: 'estado inicial: uma vez / R$ 100' },
     { esperar: 2.60 },
     { rolar: 330, dur: 1.40 },
     { esperar: 5.40 },

@@ -30,14 +30,14 @@
       /* altura explicita: os blocos absolutos la dentro (tour, sub,
          cartoes) precisam caber na caixa do pai, senao o layout acusa
          escaped_container */
-      #painel { position: absolute; left: 870px; top: 110px; width: 910px; height: 890px; }
+      #painel { position: absolute; left: 870px; top: 100px; width: 910px; height: 880px; }
       #olho { opacity: 0; margin-bottom: 10px; }
       #tit  { opacity: 0; font-size: 60px; }
 
       /* bloco A: o que a pagina mostra. Nao sai de cena — o painel
          acumula, em vez de trocar de conteudo no meio. Troca exigiria
          uma saida e uma entrada coladas, e o olho perde o fio. */
-      #tour { position: absolute; top: 190px; width: 100%; }
+      #tour { position: absolute; top: 180px; width: 100%; }
       .linha-tour { display: flex; align-items: center; gap: 22px; opacity: 0; }
       .linha-tour + .linha-tour { margin-top: 16px; }
       .risco { flex: none; width: 34px; height: 3px; background: var(--ouro); }
@@ -45,16 +45,16 @@
 
       /* bloco B: as quatro formas de ajudar */
       #sub {
-        position: absolute; top: 365px; width: 100%; opacity: 0;
+        position: absolute; top: 390px; width: 100%; opacity: 0;
         border-top: 2px solid var(--linha); padding-top: 32px;
         color: var(--suave); font-size: 36px; line-height: 1.38;
       }
       #sub b { color: var(--ouro-cl); font-weight: 700; }
 
-      #cartoes { position: absolute; top: 470px; width: 100%; }
+      #cartoes { position: absolute; top: 492px; width: 100%; }
       .forma {
         display: flex; align-items: center; gap: 24px;
-        padding: 16px 28px; margin-bottom: 16px;
+        padding: 14px 28px; margin-bottom: 14px;
         border: 2px solid var(--linha); border-radius: 18px;
         background: rgba(201, 162, 39, 0);
         opacity: 0;
@@ -106,6 +106,9 @@
             </div>
             <div class="linha-tour" id="t2">
               <span class="risco"></span><span class="txt">o projeto Dando Asas à Imaginação</span>
+            </div>
+            <div class="linha-tour" id="t3">
+              <span class="risco"></span><span class="txt">o que já foi feito em cada país</span>
             </div>
           </div>
 
@@ -178,10 +181,15 @@
 
       /* O pincel circula o cartao de resultado logo depois do toque em
          Brasil; o cartao troca para Cuba dentro do mesmo circulo em
-         13,433, que e justamente o ponto ("em cada pais"). Apaga antes
-         de a camera comecar a voltar. */
-      pincel(tl, "#pincel", 12.70, 1.45);  // desenha 12.45–13.07, some 13.90–14.35
-      tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 13.85);
+         13,433, que e justamente o ponto ("em cada pais"). Apaga junto
+         com o cursor, enquanto a camera ja esta abrindo. */
+      pincel(tl, "#pincel", 12.70, 1.85);  // desenha 12.45–13.07, some 14.30–14.75
+
+      /* A terceira linha do tour e a legenda do close: entra 0,5s antes
+         de "cada" (14.20) e so entao o cursor e o pincel somem e a camera
+         abre — um beat de cada vez, nunca dois ao mesmo tempo. */
+      entra(tl, "#t3", 13.70);             // chega em "cada" 14.20
+      tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 14.35);
 
       /* --- painel, bloco B: as quatro formas de ajudar --------------- */
       entra(tl, "#sub", 15.35);            // chega em "ajudar," 15.85

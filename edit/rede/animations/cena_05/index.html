@@ -27,6 +27,11 @@
       #fone { left: 240px; top: 90px; width: 434px; height: 918px; opacity: 0; }
       #fone video { width: 416px; height: 900px; }
 
+      /* o dedo: um pouco maior que o padrao, porque aqui ele toca um
+         cartao cheio de texto e o circulo de 58px se perdia nele */
+      #cursor { width: 70px; height: 70px; margin: -35px 0 0 -35px; }
+      #cursor::after { inset: 24px; }
+
       /* a barra de endereco fica no alto a direita, acima do painel e
          fora do caminho do celular quando a camera aproxima */
       #barra { right: 130px; top: 44px; opacity: 0; }
@@ -163,7 +168,7 @@
         <div id="painel">
           <p id="olho" class="mao">Caminho 2</p>
           <h2 id="tit" class="titulo">Anúncio<svg class="flecha" viewBox="0 0 48 24"
-              aria-hidden="true"><path d="M3 12 H41 M31 3 L43 12 L31 21" /></svg><em>página certa</em></h2>
+              aria-hidden="true"><path id="flechaPath" d="M3 12 H41 M31 3 L43 12 L31 21" /></svg><em>página certa</em></h2>
 
           <div id="canais">
             <span id="cInsta" class="canal">Instagram</span>
@@ -210,7 +215,8 @@
          tween da camera sobrescreve e o celular salta.                  */
       gsap.set("#fone", { scale: 1, x: 0, y: 0, opacity: 0 });
       tl.set("#fone", { scale: 1, x: 0, y: 0, opacity: 0 }, 0);
-      tl.set("#cursor", { x: 300, y: 700, opacity: 0 }, 0);
+      tl.set("#cursor", { x: 310, y: 760, opacity: 0 }, 0);
+      tl.set("#arte", { opacity: 1 }, 0);
 
       /* "O segundo caminho é o link direto."
          O olho ja esta na tela no quadro 0: a cena entra cortando da
@@ -221,12 +227,23 @@
       tl.set("#olho", { opacity: 1 }, 0);
       tl.fromTo("#olho", { y: 14, opacity: 0.55 },
                          { y: 0, opacity: 1, duration: 0.66, ease: "power3.out" }, 0);
-      entra(tl, "#tit", 1.97);
+      /* O titulo entra cedo, como nas cenas 1 e 6: deixar o quadro
+         quase vazio ate 2,5s abre um buraco logo depois do corte. */
+      entra(tl, "#tit", 0.95);
+
+      /* "direto." 2,47: a flecha do titulo e que bate na palavra. Ela
+         se desenha de "Anúncio" para "página certa" — o caminho direto
+         do texto na tela virando movimento, em vez de mais um bloco. */
+      const flecha = document.querySelector("#flechaPath");
+      const Lf = flecha.getTotalLength();
+      flecha.style.strokeDasharray = Lf;
+      flecha.style.strokeDashoffset = Lf;
+      tl.to(flecha, { strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut" }, 2.17);
 
       // "Em um anúncio": primeiro o aparelho, depois a arte dentro dele.
       // Separados, porque sao duas revelacoes e o olho so segue uma.
       tl.fromTo("#fone", { opacity: 0, y: 54 },
-                         { opacity: 1, y: 0, duration: 0.62, ease: "power3.out" }, 2.50);
+                         { opacity: 1, y: 0, duration: 0.62, ease: "power3.out" }, 2.62);
       tl.fromTo("#cartao", { opacity: 0, scale: 0.94, transformOrigin: "50% 50%" },
                            { opacity: 1, scale: 1, duration: 0.55, ease: "power3.out" }, 4.20);
       tl.to("#nota", { opacity: 1, duration: 0.40, ease: "power2.out" }, 4.60);
@@ -251,14 +268,18 @@
          o celular passa a ocupar x 179..795 e o painel comeca em 870.   */
       tl.to("#fone", { scale: 1.42, x: 30, y: -9, duration: 0.85, ease: "power2.inOut" }, 10.50);
 
-      // "Corrente" 12,22: o dedo toca o anuncio. O alvo e o centro do
-      // cartao em coordenadas do #fone: borda de 9px + centro da tela.
-      toque(tl, { x: 217, y: 459, em: 12.22, vindoDe: { x: 300, y: 700 }, aproxima: 0.70 });
+      // "Corrente" 12,22: o dedo toca o anuncio. O alvo e o botao do
+      // cartao — tocar o meio do texto nao parece gesto de ninguem. As
+      // coordenadas sao do #fone (borda de 9px + posicao na tela), e o
+      // cursor mora dentro dele, entao a camera ja esta embutida.
+      toque(tl, { x: 217, y: 551, em: 12.22, vindoDe: { x: 310, y: 760 }, aproxima: 0.70 });
 
       /* A tela vira logo depois do toque soltar (12,33). O <video> ja
-         esta visivel por baixo desde 12,22 — a arte por cima e que sai,
-         num corte macio de 0,22s. */
-      tl.to("#arte", { opacity: 0, duration: 0.22, ease: "power2.inOut" }, 12.34);
+         esta visivel por baixo desde 12,22 — a arte por cima e que sai.
+         E um corte seco, nao um fade: numa dissolucao de 0,22s as duas
+         telas ficavam legiveis ao mesmo tempo por uns sete quadros, e
+         tela de celular nao dissolve, ela troca. */
+      tl.set("#arte", { opacity: 0 }, 12.34);
       tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 12.85);
 
       // a ficha da Corrente acende logo atras da tela: toque -> pagina ->
