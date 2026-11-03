@@ -87,4 +87,5 @@ edit/rede/animations/*/*
 !edit/rede/animations/_kit/*.svg
 !edit/rede/*.py
 !edit/rede/*.md
+!edit/rede/verify/*.jpg
 edit/rede/animations/_teste/
