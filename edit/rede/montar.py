@@ -23,6 +23,31 @@ def dur(p):
     return float(subprocess.run(['ffprobe','-v','error','-show_entries','format=duration',
                                  '-of','csv=p=0', p], capture_output=True, text=True).stdout.strip())
 
+def util(p, d):
+    """Ate onde o render tem imagem de verdade.
+
+    Quando o data-duration do <video> passa de um quadro o fim da midia,
+    o elemento sai preto no ultimo quadro. Clonar esse quadro para
+    preencher a fatia espalha o preto pela emenda, o que aconteceu com a
+    cena 9. Aqui so recua se o quadro for mesmo escuro: a 30 fps um
+    quadro dura 0,033s, entao a primeira amostra e em d-0,04.
+    """
+    import io
+    import numpy as np
+    from PIL import Image
+    def claro(t):
+        r = subprocess.run(['ffmpeg','-v','error','-ss','%.3f' % t, '-i', p,
+                            '-frames:v','1','-f','image2pipe','-vcodec','png','-'],
+                           capture_output=True)
+        if not r.stdout: return None
+        return np.asarray(Image.open(io.BytesIO(r.stdout)).convert('L'), float).mean()
+    for dt in (0.04, 0.08, 0.12, 0.18, 0.25):
+        m = claro(d - dt)
+        if m is not None and m > 3.0:
+            return d if dt <= 0.04 else d - dt
+    return d
+
+
 # --- fatias: cada cena vai do seu inicio ate o inicio da seguinte ---
 ns = [str(i) for i in range(1, 13)]
 ini = {n: CENAS[n]['a'] for n in ns}
@@ -39,27 +64,34 @@ if faltam:
 shutil.rmtree(TMP, ignore_errors=True); os.makedirs(TMP)
 lista = os.path.join(TMP, 'lista.txt')
 CRF = '26' if LEVE else '18'
-ESC = ['-vf','scale=1280:720:flags=lanczos'] if LEVE else []
+ESC = 'scale=1280:720:flags=lanczos' if LEVE else None
 
 print(' #   fatia            render    ajuste')
 with open(lista, 'w') as lf:
     for n in ns:
         src = 'edit/rede/animations/cena_%02d/render.mp4' % int(n)
         a, z = fatia[n]; alvo = z - a
-        d = dur(src)
+        d0 = dur(src)
+        bom = util(src, d0)
+        if d0 - bom > 0.015:
+            print('   cena %s: ultimo quadro sem imagem, cortando %.2fs' % (n, d0 - bom))
+        d = bom
         # a cena 1 comeca 0,14s depois do zero: a narracao comeca ali
         pre = (ini[n] - a) if n == '1' else 0.0
         pos = alvo - pre - d
         f = []
+        if bom < d0 - 0.015:
+            f.append('trim=end=%.3f,setpts=PTS-STARTPTS' % bom)
         if pre > 0.004 or pos > 0.004:
             f.append('tpad=start_duration=%.3f:start_mode=clone:stop_duration=%.3f:stop_mode=clone'
                      % (max(0, pre), max(0, pos)))
         f.append('fps=30')
+        if ESC: f.append(ESC)
         saida = os.path.join(TMP, 'c%02d.mp4' % int(n))
         cmd = ['ffmpeg','-v','error','-y','-i', src, '-vf', ','.join(f)]
         if pos < -0.004: cmd += ['-t', '%.3f' % alvo]
-        cmd += ESC + ['-c:v','libx264','-crf',CRF,'-preset','medium','-pix_fmt','yuv420p',
-                      '-an','-r','30', saida]
+        cmd += ['-c:v','libx264','-crf',CRF,'-preset','medium','-pix_fmt','yuv420p',
+                '-an','-r','30', saida]
         subprocess.run(cmd, check=True)
         print('%2s  %6.2f-%6.2f   %6.2fs   %+5.2fs  ->  %6.2fs'
               % (n, a, z, d, pos, dur(saida)))
