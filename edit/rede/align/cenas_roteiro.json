@@ -1,0 +1,110 @@
+[
+ {
+  "n": 1,
+  "titulo": "Abertura",
+  "prev_ini": 0,
+  "prev_fim": 13,
+  "narracao": "Esta é a nova estrutura dos projetos sociais da Filos Editora. São três páginas, cada uma com seu próprio link, todas ligadas entre si e ligadas à editora.",
+  "texto_tela": "Três páginas. Três links. Uma só casa.",
+  "material": "G01, G05, G09"
+ },
+ {
+  "n": 2,
+  "titulo": "Como tudo se organiza",
+  "prev_ini": 13,
+  "prev_fim": 28,
+  "narracao": "Funciona assim: a Filos Editora é a casa. A Filos ABC reúne todos os projetos sociais. A Corrente 300 cuida dos almoços em Moçambique. E a Escolinha recebe o apoio às crianças em Angola.",
+  "texto_tela": "Filos Editora / Filos ABC / Corrente 300 / Escolinha em Angola",
+  "material": "G00"
+ },
+ {
+  "n": 3,
+  "titulo": "Caminho 1: pelo site da editora",
+  "prev_ini": 28,
+  "prev_fim": 45,
+  "narracao": "O primeiro caminho começa no site da Filos Editora. No menu, a pessoa toca em Projetos sociais e, de lá, chega à Filos ABC. Quem conhece a editora descobre, em poucos toques, tudo o que ela faz pelas crianças.",
+  "texto_tela": "Caminho 1: filoseditora.com.br → Projetos sociais → Filos ABC",
+  "material": "G01, G02"
+ },
+ {
+  "n": 4,
+  "titulo": "Tour pela Filos ABC",
+  "prev_ini": 45,
+  "prev_fim": 66,
+  "narracao": "A Filos ABC é a página para conhecer tudo. Ela mostra o que o instituto faz, o projeto Dando Asas à Imaginação e o que já foi feito em cada país. Em Como ajudar, a pessoa escolhe: apadrinhar, apoiar a escolinha, contratar uma oficina ou levar a sua empresa.",
+  "texto_tela": "Filos ABC: para conhecer tudo",
+  "material": "G03, G04"
+ },
+ {
+  "n": 5,
+  "titulo": "Caminho 2: link direto",
+  "prev_ini": 66,
+  "prev_fim": 82,
+  "narracao": "O segundo caminho é o link direto. Em um anúncio, no Instagram ou no WhatsApp, cada campanha leva à página certa. Quem vê o anúncio da Corrente 300 cai direto na doação, sem passar por outra tela.",
+  "texto_tela": "Caminho 2: anúncio → página certa, com link próprio",
+  "material": "G05; arte do anúncio"
+ },
+ {
+  "n": 6,
+  "titulo": "Como doar na Corrente 300",
+  "prev_ini": 82,
+  "prev_fim": 109,
+  "narracao": "Na Corrente 300, a doação começa na primeira tela. A pessoa escolhe quantas crianças quer apadrinhar: pelo mais e menos, pelos atalhos ou arrastando a barra. A cada criança, uma mãozinha é carimbada, e os valores por mês e por dia mudam na hora. Depois, é só tocar no botão dourado e concluir a doação. Esse botão acompanha a pessoa pela página inteira.",
+  "texto_tela": "1. Escolha as crianças / 2. Veja o valor / 3. Toque no botão",
+  "material": "G05, G06"
+ },
+ {
+  "n": 7,
+  "titulo": "Metas e progresso",
+  "prev_ini": 109,
+  "prev_fim": 131,
+  "narracao": "Mais abaixo ficam as metas. A barra mostra quantas crianças já têm padrinho e quantas faltam. A parte listrada é a pessoa: ela vê o quanto sua escolha faz a corrente crescer. As metas da cozinha, como panelas e fogão, têm barras próprias, e dá para fazer uma doação única.",
+  "texto_tela": "Veja o quanto já foi e o quanto falta",
+  "material": "G07"
+ },
+ {
+  "n": 8,
+  "titulo": "Confiança",
+  "prev_ini": 131,
+  "prev_fim": 142,
+  "narracao": "Para gerar confiança, a página explica a prestação de contas, mostra os próximos passos do projeto, as regras e o espaço para empresas parceiras.",
+  "texto_tela": "Transparência / Próximos passos / Regras / Empresas",
+  "material": "G08"
+ },
+ {
+  "n": 9,
+  "titulo": "Escolinha em Angola",
+  "prev_ini": 142,
+  "prev_fim": 163,
+  "narracao": "A Escolinha em Angola também tem link próprio. Em um só lugar, a pessoa escolhe se quer doar todo mês ou uma vez, escolhe o valor e toca em Quero apoiar a escolinha. Abaixo, ela conhece o que acontece na escola e vê as fotos do projeto.",
+  "texto_tela": "Link próprio: doar todo mês ou uma vez",
+  "material": "G09, G10"
+ },
+ {
+  "n": 10,
+  "titulo": "Tudo interligado",
+  "prev_ini": 163,
+  "prev_fim": 184,
+  "narracao": "Agora, o mais importante: separado não quer dizer isolado. Em qualquer uma das três páginas, o topo mostra a logo da Filos e os outros projetos. No fim de cada página, a pessoa encontra a rede inteira. Entrou por um projeto? Em um toque, conhece os outros.",
+  "texto_tela": "Links separados. Projetos conectados.",
+  "material": "G11, G12"
+ },
+ {
+  "n": 11,
+  "titulo": "Espalhar a corrente",
+  "prev_ini": 184,
+  "prev_fim": 197,
+  "narracao": "Os botões flutuantes ajudam a divulgar. Um abre o WhatsApp e, na Corrente 300, leva ao grupo. O outro compartilha o link da página em que a pessoa está.",
+  "texto_tela": "WhatsApp / Compartilhar",
+  "material": "G13"
+ },
+ {
+  "n": 12,
+  "titulo": "Resumo",
+  "prev_ini": 197,
+  "prev_fim": 214,
+  "narracao": "Resumindo: quem quer conhecer tudo vai à Filos ABC. Quem quer apadrinhar vai direto à Corrente 300. Quem quer apoiar a escola vai à Escolinha. São links diferentes para divulgar cada projeto, dentro da mesma casa: a Filos Editora.",
+  "texto_tela": "Conhecer: Filos ABC / Apadrinhar: Corrente 300 / Apoiar a escola: Escolinha em Angola",
+  "material": "G00"
+ }
+]

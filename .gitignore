@@ -56,3 +56,20 @@ edit/filos/*
 edit/filos/tools/*
 !edit/filos/tools/*.py
 !edit/filos/*.json
+
+# --- projeto rede: versiona codigo, alinhamento e a pagina recuperada ---
+!edit/rede
+edit/rede/*
+!edit/rede/align
+edit/rede/align/*
+!edit/rede/align/*.py
+!edit/rede/align/*.json
+!edit/rede/captura
+edit/rede/captura/*
+!edit/rede/captura/*.mjs
+!edit/rede/captura/package.json
+!edit/rede/sites
+edit/rede/sites/*
+!edit/rede/sites/rede
+edit/rede/sites/rede/*
+!edit/rede/sites/rede/rede-filos.html

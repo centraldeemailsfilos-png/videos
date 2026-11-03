@@ -1,0 +1,102 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rede Filos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="../_fontes/fontes.css">
+<link rel="stylesheet" href="assets/rede.css">
+<style>
+/* Layout: um mapa da rede no topo e um cartão por link, cada um com o celular mostrando a página real. */
+body{padding-bottom:0}
+.mapa{display:flex;flex-direction:column;align-items:center;margin-top:30px}
+.no{display:flex;flex-direction:column;gap:2px;align-items:center;text-align:center;padding:12px 24px;border:2px solid var(--linha);border-radius:var(--w1);background:var(--fundo3);text-decoration:none;min-width:min(100%,240px);transition:transform .2s,border-color .2s}
+.no:hover{transform:translateY(-3px);border-color:var(--ouro)}
+.no b{font-family:var(--mao);font-weight:400;font-size:1.55rem;line-height:1.1;color:var(--ouro-claro)}
+.no span{font-size:.86rem;color:var(--suave)}
+.no.ouro{background:var(--ouro);border-color:var(--ouro)}.no.ouro b,.no.ouro span{color:#14110E}
+.fio{width:3px;height:26px;background:var(--ouro)}
+.ramos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:min(100%,600px);border-top:3px solid var(--ouro);padding-top:18px;position:relative}
+.ramos>*{min-width:0}
+.cartao-link{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:clamp(18px,3vw,36px);align-items:center;background:var(--fundo2);border:1px solid var(--fina);border-radius:var(--w2);padding:clamp(18px,3vw,32px)}
+.cartao-link:nth-child(2n){border-radius:var(--w1)}
+.cartao-link>*{min-width:0}
+@media (max-width:620px){.cartao-link{grid-template-columns:minmax(0,1fr)}.fone{max-width:190px;margin-inline:auto}}
+.fone{border:5px solid #000;outline:1px solid var(--linha);border-radius:26px;overflow:hidden;background:#000}
+.fone img{width:100%;aspect-ratio:390/844;object-fit:cover;object-position:top}
+.ender{display:block;width:fit-content;max-width:100%;padding:5px 13px;border-radius:14px;background:#0F0D0A;border:1px dashed var(--linha);color:var(--ouro-claro);font-size:.95rem;font-weight:600;overflow-wrap:anywhere}
+.t{width:100%;border-collapse:collapse;font-size:1rem;min-width:560px}
+.t th{text-align:left;padding:10px 14px;background:var(--ouro);color:#14110E}
+.t th:first-child{border-radius:18px 0 0 0}.t th:last-child{border-radius:0 18px 0 0}
+.t td{padding:10px 14px;border-bottom:1px solid var(--fina);background:var(--fundo3)}
+.rolar{overflow-x:auto;border-radius:18px}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="aspero" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="4"></feTurbulence><feDisplacementMap in="SourceGraphic" scale="5"></feDisplacementMap></filter></defs><symbol id="mao" viewBox="0 0 100 110"><g fill="currentColor"><rect x="24" y="50" width="54" height="54" rx="25"></rect><rect x="26" y="14" width="12" height="52" rx="6" transform="rotate(-7 32 40)"></rect><rect x="42" y="6" width="12" height="56" rx="6"></rect><rect x="58" y="10" width="12" height="54" rx="6" transform="rotate(5 64 40)"></rect><rect x="72" y="24" width="11" height="44" rx="5.5" transform="rotate(14 77 50)"></rect><rect x="6" y="52" width="13" height="42" rx="6.5" transform="rotate(-42 20 80)"></rect></g></symbol><symbol id="traco" viewBox="0 0 240 16" preserveAspectRatio="none"><path fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" d="M4 10c30-8 42 6 72 0s42-8 72-1 50 3 88-4"></path></symbol></svg>
+
+<main>
+<section class="sec" style="padding-block:clamp(32px,5vw,64px);overflow:hidden">
+  <svg class="deco flutua" style="width:70px;height:78px;right:7%;top:26px;color:var(--ouro)" viewBox="0 0 100 110" aria-hidden="true"><use href="#mao"></use></svg>
+  <div class="wrap">
+    <img src="imagens/marca-clara.webp" alt="Filos Editora" style="height:64px;width:auto;margin-bottom:18px">
+    <p class="mao">Como a rede vai funcionar</p>
+    <h1 class="h1" style="font-size:clamp(42px,6.4vw,78px)">Cada projeto com seu link. <em>Todos na mesma casa.</em></h1>
+    <svg class="rabisco" aria-hidden="true"><use href="#traco"></use></svg>
+    <p class="lead" style="margin-top:14px">A divulgação fica separada, e cada anúncio leva à página certa. Quem chega por qualquer link vê que tudo faz parte da Filos.</p>
+    <div class="mapa" role="group" aria-label="Mapa da rede">
+      <a class="no ouro" href="https://filoseditora.com.br/"><b>Filos Editora</b><span>A editora que sustenta tudo</span></a>
+      <span class="fio" aria-hidden="true"></span>
+      <a class="no" href="https://claude.ai/artifact/4733R9vGvgor4KGJGCYRGp"><b>Filos ABC</b><span>A casa dos projetos sociais</span></a>
+      <span class="fio" aria-hidden="true"></span>
+      <div class="ramos">
+        <a class="no" href="https://claude.ai/artifact/LkPJM1HBgxygbyhPxWPQ7C" style="min-width:0"><b>Corrente 300</b><span>Almoços em Moçambique</span></a>
+        <a class="no" href="https://claude.ai/artifact/PdeomyFvkeyw1G7LLDMUhq" style="min-width:0"><b>Escolinha em Angola</b><span>Educação e comida</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt">
+  <div class="wrap pilha" style="gap:20px">
+    <div class="pilha" style="gap:6px"><p class="mao">Quatro páginas, quatro links</p><h2 class="h2">O que cada link <em>faz</em></h2></div>
+    <article class="cartao-link">
+      <div class="fone"><img src="imagens/tela-filos.jpg" alt="Primeira tela do site da Filos Editora no celular."></div>
+      <div class="pilha" style="gap:10px"><h3 class="h3">Filos Editora</h3><code class="ender">filoseditora.com.br</code><p>Apresenta a editora para quem quer publicar um livro. A área de projetos sociais leva à Filos ABC.</p><p class="peq suave">Divulgar para: autores e clientes da editora.</p><a class="btn vazado" style="width:fit-content" href="https://filoseditora.com.br/">Abrir o site</a></div>
+    </article>
+    <article class="cartao-link">
+      <div class="fone"><img src="imagens/tela-abc.jpg" alt="Primeira tela da página Filos ABC no celular."></div>
+      <div class="pilha" style="gap:10px"><h3 class="h3">Filos ABC</h3><code class="ender">filosabc.filoseditora.com.br</code><p>Reúne tudo o que a Filos faz na área social e apresenta os projetos e as formas de ajudar.</p><p class="peq suave">Divulgar para: parceiros, imprensa, empresas e quem quer conhecer o trabalho.</p><a class="btn vazado" style="width:fit-content" href="https://claude.ai/artifact/4733R9vGvgor4KGJGCYRGp">Abrir a prévia</a></div>
+    </article>
+    <article class="cartao-link">
+      <div class="fone"><img src="imagens/tela-corrente.jpg" alt="Primeira tela da Corrente 300 no celular, com o seletor de crianças."></div>
+      <div class="pilha" style="gap:10px"><h3 class="h3">Corrente 300</h3><code class="ender">corrente300.filoseditora.com.br</code><p>Vai direto à doação: a pessoa escolhe quantas crianças apadrinhar e vê o valor na hora.</p><p class="peq suave">Divulgar para: tráfego pago e campanhas de apadrinhamento.</p><a class="btn cheio" style="width:fit-content" href="https://claude.ai/artifact/LkPJM1HBgxygbyhPxWPQ7C">Abrir a prévia</a></div>
+    </article>
+    <article class="cartao-link">
+      <div class="fone"><img src="imagens/tela-escola.jpg" alt="Primeira tela da Escolinha em Angola no celular."></div>
+      <div class="pilha" style="gap:10px"><h3 class="h3">Escolinha em Angola</h3><code class="ender">projetosocialangola.filoseditora.com.br</code><p>Mostra a escolinha e permite doar uma vez ou todo mês, nos valores já existentes.</p><p class="peq suave">Divulgar para: campanhas da escolinha. É o endereço que já existe hoje.</p><a class="btn cheio" style="width:fit-content" href="https://claude.ai/artifact/PdeomyFvkeyw1G7LLDMUhq">Abrir a prévia</a></div>
+    </article>
+    <p class="peq suave">Os endereços são sugestões e ainda precisam ser criados. Os botões abrem as prévias atuais.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap duas" style="align-items:start">
+    <div class="pilha">
+      <p class="mao">Separado na divulgação</p>
+      <h2 class="h2">Cada anúncio para <em>a página certa</em></h2>
+      <div class="rolar"><table class="t"><thead><tr><th scope="col">Se a campanha fala de</th><th scope="col">O link leva para</th></tr></thead><tbody>
+        <tr><td>Almoço de sábado, R$ 1 por dia</td><td>Corrente 300</td></tr>
+        <tr><td>Escola, educação e Angola</td><td>Escolinha em Angola</td></tr>
+        <tr><td>O trabalho social da Filos</td><td>Filos ABC</td></tr>
+        <tr><td>Publicar um livro</td><td>Filos Editora</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="pilha">
+      <p class="mao">Unido na experiência</p>
+      <h2 class="h2">Igual em <em>todas as páginas</em></h2>
+      <div class="cartao"><h3 style="font-size:1.25rem">Mesma identidade</h3><p class="peq">Fundo escuro, dourado e tipografia da Filos, com mãos e rabiscos de criança nos projetos.</p></div>
+      <div class="cartao"><h3 style="font-size:1.25rem">Menu que liga tudo</h3><p class="peq">A logo da Filos e os projetos ficam no topo de cada página, para ir de uma a outra em um toque.</p></div>
+      <div class="cartao"><h3 style="font-size:1.25rem">Rodapé da rede</h3><p class="peq">Cada página termina apresentando as outras três.</p></div>
+      <div class="cartao"><h3 style="font-size:1.25rem">Compartilhar o link certo</h3><p class="peq">O botão de cada página envia o link dela mesma.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+</body></html>
