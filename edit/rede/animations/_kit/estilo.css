@@ -1,0 +1,86 @@
+/* Kit visual do video da Rede Filos.
+ * Identidade da secao 7 do roteiro. Toda cena importa este arquivo,
+ * para que as 12 saiam iguais sem ninguem reescrever a paleta.
+ */
+:root {
+  --fundo:   #14110E;
+  --fundo2:  #1C1712;
+  --ouro:    #C9A227;
+  --ouro-cl: #DDBB6E;
+  --creme:   #F1E8D9;
+  --suave:   #A99C88;
+  --linha:   #3A3226;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1920px; height: 1080px; overflow: hidden;
+  background: var(--fundo);
+  font-family: "Noto Sans", system-ui, sans-serif;
+}
+#root { width: 100%; height: 100%; }
+.clip  { position: absolute; inset: 0; }
+.palco { position: absolute; inset: 0; background: var(--fundo); }
+
+/* fundo: vinheta suave para o celular nao flutuar no vazio */
+.vinheta {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 58% 62% at 50% 46%, #221C15 0%, var(--fundo) 72%);
+}
+
+/* ---------- tipografia ---------- */
+.titulo {
+  font-family: "Noto Serif", Georgia, serif;
+  color: var(--creme); font-size: 62px; line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+.titulo em { font-style: italic; color: var(--ouro); }
+.mao  { font-family: "Caveat Brush", cursive; color: var(--ouro-cl);
+        font-size: 40px; line-height: 1.1; }
+.apoio { color: var(--suave); font-size: 30px; line-height: 1.38; }
+
+/* legenda da cena: o "Texto na tela" do roteiro */
+.faixa {
+  position: absolute; left: 96px; bottom: 74px; max-width: 760px;
+  color: var(--creme); font-size: 44px; font-weight: 700; line-height: 1.22;
+}
+.faixa b { color: var(--ouro-cl); font-weight: 700; }
+
+/* ---------- celular ---------- */
+.fone {
+  position: absolute;
+  border: 9px solid #090806; border-radius: 42px; overflow: hidden;
+  background: #000; box-shadow: 0 38px 90px rgba(0,0,0,.66), 0 0 0 1px #2A241B;
+}
+.fone video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* barra de endereco: fica sempre acima do celular (secao 6 do roteiro) */
+.ender {
+  position: absolute; display: flex; align-items: center; gap: 12px;
+  padding: 11px 22px 11px 18px;
+  background: #0F0D0A; border: 1px dashed var(--linha); border-radius: 17px;
+  color: var(--ouro-cl); font-size: 25px; font-weight: 600; white-space: nowrap;
+}
+.ender::before {
+  content: ""; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--ouro); flex: none;
+}
+
+/* ---------- cursor: circulo dourado que encolhe no toque ---------- */
+.cursor {
+  position: absolute; width: 58px; height: 58px; margin: -29px 0 0 -29px;
+  border-radius: 50%; background: rgba(201,162,39,.30);
+  border: 3px solid var(--ouro-cl); pointer-events: none; opacity: 0;
+}
+.cursor::after {
+  content: ""; position: absolute; inset: 20px; border-radius: 50%;
+  background: var(--ouro-cl);
+}
+
+/* ---------- traco de pincel em volta do botao ---------- */
+.pincel { position: absolute; overflow: visible; pointer-events: none; }
+.pincel path {
+  fill: none; stroke: var(--ouro); stroke-width: 7;
+  stroke-linecap: round; stroke-linejoin: round;
+  filter: url(#aspero);
+}

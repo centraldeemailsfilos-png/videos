@@ -73,3 +73,13 @@ edit/rede/sites/*
 !edit/rede/sites/rede
 edit/rede/sites/rede/*
 !edit/rede/sites/rede/rede-filos.html
+!edit/rede/animations
+edit/rede/animations/*
+!edit/rede/animations/*.sh
+!edit/rede/animations/*/
+edit/rede/animations/*/*
+!edit/rede/animations/*/index.html
+!edit/rede/animations/_kit/*.css
+!edit/rede/animations/_kit/*.js
+!edit/rede/animations/_kit/*.md
+edit/rede/animations/_teste/
