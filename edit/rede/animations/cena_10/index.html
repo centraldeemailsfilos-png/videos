@@ -26,7 +26,11 @@
          vídeo 416x900, caixa 434x918. O vídeo tem 390x844 CSS do site e
          entra escalado por k = 416/390 = 1,0667; toda coordenada vinda do
          JSON da gravacao passa por esse k.                              */
-      #fone { left: 240px; top: 90px; width: 434px; height: 918px; opacity: 0; }
+      /* fundo do mesmo marrom das paginas do site, nao preto: nos dois ou
+         tres quadros entre a chegada do celular e o primeiro frame da
+         gravacao, a tela vazia nao abre um buraco preto no quadro */
+      #fone { left: 240px; top: 90px; width: 434px; height: 918px;
+              opacity: 0; background: #19140F; }
       /* as quatro gravacoes se empilham no mesmo lugar; quem mostra uma
          de cada vez e o data-start de cada <video> */
       #fone video { position: absolute; left: 0; top: 0; width: 416px; height: 900px; }
@@ -135,8 +139,8 @@
       const k = 1.0667;                        // CSS do site -> px da composicao
       const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
       // cartao "Corrente 300" do rodape: no quadro assentado da G12 ele vai
-      // de y 360 a 455 e de x 25 a 365 no CSS do site; o centro e (195, 408)
-      const CARTAO = P(195, 408);
+      // de y ~368 a 463 e de x 25 a 365 no CSS do site; o centro e (195, 416)
+      const CARTAO = P(195, 416);
       const POUSO  = { x: CARTAO.x, y: CARTAO.y + 70 };   // de onde o dedo vem
 
       const tl = gsap.timeline({ paused: true });
@@ -173,8 +177,13 @@
       /* Celular e barra de endereco entram juntos, com o mesmo tween: sao
          uma coisa so, um navegador chegando. Pousam em 8,94, o mesmo
          instante em que a G11a comeca — assim a tela nunca aparece preta. */
-      tl.fromTo(["#fone", "#barras"], { opacity: 0, x: -64 },
-                { opacity: 1, x: 0, duration: 0.60, ease: "power3.out" }, 8.34);
+      /* o deslocamento assenta cedo (power3.out) e a opacidade sobe tarde
+         (power3.in): assim o celular so fica solido no quadro em que a
+         G11a comeca, e a tela nunca aparece apagada */
+      tl.fromTo(["#fone", "#barras"], { x: -64 },
+                { x: 0, duration: 0.60, ease: "power3.out" }, 8.34);
+      tl.fromTo(["#fone", "#barras"], { opacity: 0 },
+                { opacity: 1, duration: 0.60, ease: "power3.in" }, 8.34);
 
       /* O pincel circula a barra de marcas da rede. Fica 8,94 ocupado pela
          chegada do celular, entao o traco se desenha logo em seguida, sob
