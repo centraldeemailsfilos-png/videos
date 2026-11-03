@@ -1,59 +1,120 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/fontes/fontes.css" />
+    <link rel="stylesheet" href="assets/estilo.css" />
     <style>
-      /* Placeholders: replace all three with the film's own palette and display face. */
-      :root {
-        --ground: #000;
-        --ink: #ffffff;
-        --font-display: sans-serif;
-      }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: var(--ground);
-      }
-      #root {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
-      }
-      #title {
-        color: var(--ink);
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-      }
+      /* Tres celulares lado a lado, menores que nas cenas de tour:
+         aqui o assunto e que sao tres, nao o que esta dentro de cada um. */
+      .tri   { width: 304px; height: 642px; border-width: 7px; border-radius: 32px;
+               top: 286px; opacity: 0; }
+      .tri video { width: 290px; height: 628px; }
+      #f1 { left: 324px; }  #f2 { left: 808px; }  #f3 { left: 1292px; }
+
+      #marca { position: absolute; left: 50%; top: 104px; height: 78px;
+               transform: translateX(-50%); opacity: 0; }
+
+      /* a mao dourada que carimba cada tela */
+      .carimbo { position: absolute; width: 112px; height: 124px; color: var(--ouro);
+                 opacity: 0; pointer-events: none; }
+      #c1 { left: 466px; }  #c2 { left: 950px; }  #c3 { left: 1434px; }
+      .carimbo { top: 238px; }
+
+      .rot { position: absolute; top: 976px; width: 304px; text-align: center;
+             color: var(--ouro-cl); font-size: 30px; font-weight: 600; opacity: 0; }
+      #r1 { left: 324px; }  #r2 { left: 808px; }  #r3 { left: 1292px; }
+
+      #frase { position: absolute; left: 0; right: 0; top: 196px; text-align: center;
+               color: var(--creme); font-size: 58px; font-weight: 700; }
+      #frase span { opacity: 0; display: inline-block; }
+      #frase .b { color: var(--ouro-cl); }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      <h1 id="title" class="clip" data-start="0" data-duration="10" data-track-index="0">Title</h1>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="14.25"
+         data-width="1920" data-height="1080">
+      <div id="cena" class="clip">
+        <div class="palco"></div>
+        <div class="vinheta"></div>
+
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+          <symbol id="mao" viewBox="0 0 100 110"><g fill="currentColor">
+            <rect x="24" y="50" width="54" height="54" rx="25"></rect>
+            <rect x="26" y="14" width="12" height="52" rx="6" transform="rotate(-7 32 40)"></rect>
+            <rect x="42" y="6"  width="12" height="56" rx="6"></rect>
+            <rect x="58" y="10" width="12" height="54" rx="6" transform="rotate(5 64 40)"></rect>
+            <rect x="72" y="24" width="11" height="44" rx="5.5" transform="rotate(14 77 50)"></rect>
+            <rect x="6"  y="52" width="13" height="42" rx="6.5" transform="rotate(-42 20 80)"></rect>
+          </g></symbol>
+        </defs></svg>
+
+        <img id="marca" src="assets/marca-clara.webp" alt="Filos Editora" />
+
+        <p id="frase">
+          <span id="s1">Três páginas.</span>
+          <span id="s2" class="b">&nbsp;Três links.</span>
+          <span id="s3">&nbsp;Uma só casa.</span>
+        </p>
+
+        <div id="f1" class="fone tri">
+          <video id="v1" src="assets/S1a.mp4" muted data-start="0" data-duration="14.25"></video></div>
+        <div id="f2" class="fone tri">
+          <video id="v2" src="assets/S1b.mp4" muted data-start="0" data-duration="14.25"></video></div>
+        <div id="f3" class="fone tri">
+          <video id="v3" src="assets/S1c.mp4" muted data-start="0" data-duration="14.25"></video></div>
+
+        <svg id="c1" class="carimbo" viewBox="0 0 100 110"><use href="#mao"/></svg>
+        <svg id="c2" class="carimbo" viewBox="0 0 100 110"><use href="#mao"/></svg>
+        <svg id="c3" class="carimbo" viewBox="0 0 100 110"><use href="#mao"/></svg>
+
+        <p id="r1" class="rot">Filos ABC</p>
+        <p id="r2" class="rot">Corrente 300</p>
+        <p id="r3" class="rot">Escolinha em Angola</p>
+      </div>
     </div>
+
+    <script src="assets/kit.js"></script>
     <script>
+      /* Cena 1, 14,25s. Tempos locais do dossie:
+           "estrutura" 1.87 | "Editora." 5.63 | "São" 6.54 | "três" 6.73
+           "páginas," 7.07  | "link," 10.45   | "ligadas" 11.15
+           "entre si" 11.75 | "ligadas à editora" 13.20                 */
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.fromTo("#title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0);
+
+      // a marca primeiro: e dela que a narracao parte
+      gsap.set("#marca", { opacity: 1 });
+      tl.set("#marca", { opacity: 1 }, 0);
+      tl.fromTo("#marca", { scale: 1.035, transformOrigin: "50% 50%" },
+                          { scale: 1, duration: 1.60, ease: "power2.out" }, 0);
+
+      /* As tres telas sobem uma por vez em "São três páginas" e a mao
+         carimba cada uma logo atras. Nunca duas ao mesmo tempo: o olho
+         nao acompanha duas revelacoes independentes. */
+      [["#f1", "#c1", "#r1", 6.54],
+       ["#f2", "#c2", "#r2", 7.07],
+       ["#f3", "#c3", "#r3", 7.60]].forEach(([f, c, r, em]) => {
+        tl.fromTo(f, { opacity: 0, y: 54 },
+                     { opacity: 1, y: 0, duration: 0.62, ease: "power3.out" }, em - 0.46);
+        // o carimbo bate e sai: fica 0,5s, como tinta encostando
+        tl.fromTo(c, { opacity: 0, scale: 1.7, rotate: -14, transformOrigin: "50% 80%" },
+                     { opacity: 1, scale: 1, rotate: -6, duration: 0.26, ease: "power3.out" }, em + 0.10);
+        tl.to(c, { opacity: 0, duration: 0.40, ease: "power2.inOut" }, em + 0.62);
+        tl.to(r, { opacity: 1, duration: 0.45, ease: "power2.out" }, em + 0.30);
+      });
+
+      // a frase entra em tres partes, cada uma na sua
+      tl.fromTo("#s1", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.50, ease: "power3.out" },  6.57);
+      tl.fromTo("#s2", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.50, ease: "power3.out" },  9.95);
+      tl.fromTo("#s3", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 12.70);
+
+      // "todas ligadas entre si": as tres se aproximam de leve, uma vez
+      tl.to("#f1", { x:  26, duration: 0.90, ease: "power2.inOut" }, 11.15);
+      tl.to("#f3", { x: -26, duration: 0.90, ease: "power2.inOut" }, 11.15);
+
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>

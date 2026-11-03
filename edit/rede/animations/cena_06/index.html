@@ -10,8 +10,8 @@
       /* O celular tem 416x900 e o video, 390x844 CSS, entra escalado por
          k = 900/844 = 1,0664. Toda coordenada de toque vem do JSON da
          gravacao em CSS do site e e multiplicada por k. */
-      #fone  { left: 240px; top:  90px; width: 434px; height: 940px; }
-      #fone video { width: 434px; height: 940px; }
+      #fone  { left: 240px; top:  90px; width: 434px; height: 918px; }
+      #fone video { width: 416px; height: 900px; }
       /* a barra fica em cima a direita, fora do caminho do celular:
          quando a camera aproxima, o celular sangra para fora do quadro
          e passaria por cima dela se estivesse acima dele */
@@ -20,7 +20,7 @@
       .cursor { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
       .cursor::after { inset: 15px; }
 
-      #pincel { position: absolute; left: 0; top: 0; width: 434px; height: 940px;
+      #pincel { position: absolute; left: 0; top: 0; width: 416px; height: 900px;
                 opacity: 0; overflow: visible; }
       #pincel path { fill: none; stroke: var(--ouro); stroke-width: 6;
                      stroke-linecap: round; filter: url(#aspero); }
@@ -62,10 +62,10 @@
                    data-start="0" data-duration="32.6"></video>
             <!-- o pincel e o cursor moram dentro da camera: assim
                  acompanham o zoom em vez de descolar da tela -->
-            <svg id="pincel" viewBox="0 0 434 940">
-              <path d="M 44,842 C 44,812 120,802 208,802 C 296,802 374,812 374,842
-                       C 374,872 296,884 208,884 C 120,884 44,872 44,842
-                       C 44,826 78,814 140,808"/>
+            <svg id="pincel" viewBox="0 0 416 900">
+              <path d="M 42,840 C 42,812 118,802 208,802 C 298,802 374,812 374,840
+                       C 374,868 298,880 208,880 C 118,880 42,868 42,840
+                       C 42,824 76,812 138,806"/>
             </svg>
             <div id="cursor" class="cursor"></div>
         </div>
@@ -93,7 +93,7 @@
            "acompanha" 28.31 | "inteira" 31.79
          Os toques da propria gravacao caem em 9.733 / 10.300 / 12.200 /
          12.867 — a G06 foi gravada com estes tempos dentro.            */
-      const k = 1.1137;                       // CSS do site -> px da composicao
+      const k = 1.0667;                       // CSS do site -> px da composicao
       const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
       const MAIS   = P(319, 381);             // botao +
       const ATALHO = P(195, 450);             // atalho "5"
@@ -105,8 +105,8 @@
          dentro dele. Escalando so o conteudo, a tela cortava no meio da
          palavra, o que nenhum telefone faz. Aqui o celular cresce e
          sangra para fora do quadro, que e como um close funciona.
-         Com escala 1,42 e deslocamento (43,-284) o bloco da calculadora
-         (y 670 no celular) cai no centro vertical do quadro.          */
+         Com escala 1,42 e deslocamento (43,-261) o bloco da calculadora
+         cai no centro vertical do quadro.                             */
       gsap.set("#fone", { scale: 1, x: 0, y: 0 });
       tl.set("#fone", { scale: 1, x: 0, y: 0 }, 0);
       tl.set("#cursor", { x: MAIS.x, y: MAIS.y + 90, opacity: 0 }, 0);
@@ -118,7 +118,7 @@
       /* camera: aproxima na calculadora pouco antes do primeiro toque e
          segura ate antes da rolagem. Uma aproximacao so, em vez de varias:
          a cada movimento de camera o olho reassenta, e seriam quatro. */
-      tl.to("#fone", { scale: 1.42, x: 43, y: -284, duration: 0.85, ease: "power2.inOut" }, 8.55);
+      tl.to("#fone", { scale: 1.42, x: 43, y: -261, duration: 0.85, ease: "power2.inOut" }, 8.55);
       tl.to("#fone", { scale: 1.00, x:  0, y:    0, duration: 0.95, ease: "power2.inOut" }, 26.45);
 
       let onde = { x: MAIS.x, y: MAIS.y + 90 };
