@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/fontes/fontes.css" />
+    <link rel="stylesheet" href="assets/estilo.css" />
+    <style>
+      /* O celular tem 416x900 e o video, 390x844 CSS, entra escalado por
+         k = 900/844 = 1,0664. Toda coordenada de toque vem do JSON da
+         gravacao em CSS do site e e multiplicada por k. */
+      #fone  { left: 240px; top:  90px; width: 434px; height: 940px; }
+      #fone video { width: 434px; height: 940px; }
+      /* a barra fica em cima a direita, fora do caminho do celular:
+         quando a camera aproxima, o celular sangra para fora do quadro
+         e passaria por cima dela se estivesse acima dele */
+      #barra { right: 130px; top: 44px; }
+
+      .cursor { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+      .cursor::after { inset: 15px; }
+
+      #pincel { position: absolute; left: 0; top: 0; width: 434px; height: 940px;
+                opacity: 0; overflow: visible; }
+      #pincel path { fill: none; stroke: var(--ouro); stroke-width: 6;
+                     stroke-linecap: round; filter: url(#aspero); }
+
+      #painel { position: absolute; left: 870px; top: 214px; width: 910px; }
+      #olho   { opacity: 0; margin-bottom: 10px; }
+      #tit    { opacity: 0; margin-bottom: 54px; }
+      .passo  { display: flex; align-items: baseline; gap: 26px;
+                margin-bottom: 42px; opacity: 0; }
+      .passo .n {
+        flex: none; width: 66px; height: 66px; border-radius: 50%;
+        border: 3px solid var(--ouro); color: var(--ouro);
+        font-size: 34px; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        transform: translateY(10px);
+      }
+      .passo .q { color: var(--creme); font-size: 52px; font-weight: 700;
+                  line-height: 1.18; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="32.6"
+         data-width="1920" data-height="1080">
+      <div id="cena" class="clip">
+        <div class="palco"></div>
+        <div class="vinheta"></div>
+
+        <svg width="0" height="0" aria-hidden="true"><defs>
+          <filter id="aspero" x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="3"/>
+            <feDisplacementMap in="SourceGraphic" scale="4"/>
+          </filter>
+        </defs></svg>
+
+        <div id="barra" class="ender">corrente300.filoseditora.com.br</div>
+
+        <div id="fone" class="fone">
+            <video id="tela" src="assets/G06.mp4" muted
+                   data-start="0" data-duration="32.6"></video>
+            <!-- o pincel e o cursor moram dentro da camera: assim
+                 acompanham o zoom em vez de descolar da tela -->
+            <svg id="pincel" viewBox="0 0 434 940">
+              <path d="M 44,842 C 44,812 120,802 208,802 C 296,802 374,812 374,842
+                       C 374,872 296,884 208,884 C 120,884 44,872 44,842
+                       C 44,826 78,814 140,808"/>
+            </svg>
+            <div id="cursor" class="cursor"></div>
+        </div>
+
+        <div id="painel">
+          <p id="olho" class="mao">Passo a passo</p>
+          <h2 id="tit" class="titulo">Como doar na <em>Corrente&nbsp;300</em></h2>
+          <div class="passo" id="p1"><span class="n">1</span>
+            <span class="q">Escolha as crianças</span></div>
+          <div class="passo" id="p2"><span class="n">2</span>
+            <span class="q">Veja o valor</span></div>
+          <div class="passo" id="p3"><span class="n">3</span>
+            <span class="q">Toque no botão</span></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/kit.js"></script>
+    <script>
+      /* Tempos locais da cena 6 (comeca em 97,53s da narracao), tirados do
+         alinhamento palavra a palavra:
+           "crianças" 6.93 | "mais" 9.72 | "menos" 10.28 | "atalhos" 12.17
+           "arrastando" 12.84 | "barra" 13.89 | "mãozinha" 16.51
+           "valores" 19.17 | "botão" 24.97 | "dourado" 25.79
+           "acompanha" 28.31 | "inteira" 31.79
+         Os toques da propria gravacao caem em 9.733 / 10.300 / 12.200 /
+         12.867 — a G06 foi gravada com estes tempos dentro.            */
+      const k = 1.1137;                       // CSS do site -> px da composicao
+      const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
+      const MAIS   = P(319, 381);             // botao +
+      const ATALHO = P(195, 450);             // atalho "5"
+      const FAIXA0 = P(42,  528), FAIXA1 = P(48, 528);
+      const BOTAO  = P(195, 806);             // botao dourado
+
+      const tl = gsap.timeline({ paused: true });
+      /* A camera e o celular inteiro, moldura junto — nao o conteudo
+         dentro dele. Escalando so o conteudo, a tela cortava no meio da
+         palavra, o que nenhum telefone faz. Aqui o celular cresce e
+         sangra para fora do quadro, que e como um close funciona.
+         Com escala 1,42 e deslocamento (43,-284) o bloco da calculadora
+         (y 670 no celular) cai no centro vertical do quadro.          */
+      gsap.set("#fone", { scale: 1, x: 0, y: 0 });
+      tl.set("#fone", { scale: 1, x: 0, y: 0 }, 0);
+      tl.set("#cursor", { x: MAIS.x, y: MAIS.y + 90, opacity: 0 }, 0);
+
+      entra(tl, "#olho", 0.45);
+      entra(tl, "#tit",  0.95);
+      entra(tl, "#p1", 6.93 - 0.5);
+
+      /* camera: aproxima na calculadora pouco antes do primeiro toque e
+         segura ate antes da rolagem. Uma aproximacao so, em vez de varias:
+         a cada movimento de camera o olho reassenta, e seriam quatro. */
+      tl.to("#fone", { scale: 1.42, x: 43, y: -284, duration: 0.85, ease: "power2.inOut" }, 8.55);
+      tl.to("#fone", { scale: 1.00, x:  0, y:    0, duration: 0.95, ease: "power2.inOut" }, 26.45);
+
+      let onde = { x: MAIS.x, y: MAIS.y + 90 };
+      onde = toque(tl, { ...MAIS,   em:  9.73, vindoDe: onde, aproxima: 0.70 });
+      onde = toque(tl, { ...MAIS,   em: 10.30, vindoDe: onde, aproxima: 0.30 });
+      onde = toque(tl, { ...ATALHO, em: 12.20, vindoDe: onde, aproxima: 0.55 });
+
+      // "arrastando a barra": de 5 para 10 numa faixa de 1 a 300 o polegar
+      // anda ~6px. Quem conta a historia e o contador e os valores mudando.
+      tl.to("#cursor", { x: FAIXA0.x, y: FAIXA0.y, duration: 0.45, ease: "power3.inOut" }, 12.87 - 0.45);
+      tl.to("#cursor", { scale: 0.70, duration: 0.12, ease: "power2.in" }, 12.87);
+      tl.to("#cursor", { x: FAIXA1.x, duration: 1.50, ease: "power2.inOut" }, 12.87);
+      tl.to("#cursor", { scale: 1.00, duration: 0.22, ease: "power2.out" }, 14.37);
+      tl.to("#cursor", { opacity: 0,  duration: 0.40, ease: "power2.inOut" }, 14.90);
+
+      entra(tl, "#p2", 19.17 - 0.5);
+      entra(tl, "#p3", 24.97 - 0.5);
+
+      // "tocar no botao dourado": o cursor volta e o pincel circula.
+      // Sem pulso de toque — a gravacao nao clica, para nao navegar.
+      tl.to("#cursor", { x: BOTAO.x, y: BOTAO.y, duration: 0.01 }, 24.20);
+      tl.to("#cursor", { opacity: 1, duration: 0.30, ease: "power2.out" }, 24.40);
+      pincel(tl, "#pincel", 25.10, 2.0);
+      tl.to("#cursor", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 26.40);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

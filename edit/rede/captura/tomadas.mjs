@@ -77,18 +77,22 @@ export const TOMADAS = [
     { esperar: 6.0 },
   ]},
 
-  // ---------- G06  Corrente: + ate 3, atalho 5, arrastar ate 10  (cena 6) ----------
+  /* ---------- G06  Corrente: + ate 3, atalho 5, arrastar ate 10  (cena 6) ----------
+   * As duracoes nao sao arbitrarias: cada toque cai na palavra da
+   * narracao que o nomeia. Tempos locais da cena 6 (que comeca em
+   * 97,53s): "mais" 9.72 | "menos" 10.28 | "atalhos" 12.17 |
+   * "arrastando" 12.84 | "acompanha" 28.31. Total 32,57s, a cena inteira.
+   * #atalhos e a fileira 1/2/5/10/30; #vals sao os valores de doacao
+   * avulsa, bem mais abaixo na pagina.                                 */
   { id: 'G06', pagina: CORRENTE, endereco: E.corrente, passos: [
-    { esperar: 1.4 },
-    { tocar: '#mais', rotulo: '+ (2)', dur: 0.75 },
-    { tocar: '#mais', rotulo: '+ (3)', dur: 1.9 },
-    { tocar: '#vals > button:nth-of-type(3)', rotulo: 'atalho 5', dur: 2.2 },
-    { arrastar: { alvo: '#faixa', para: 10, dur: 1.8 }, rotulo: 'arrastar ate 10' },
-    { esperar: 2.6 },
-    { rolar: 760, dur: 2.0 },                 // a barra flutuante aparece
-    { esperar: 2.4 },
-    { rolar: 1400, dur: 2.0 },
-    { esperar: 2.0 },
+    { esperar: 9.72 },
+    { tocar: '#mais', rotulo: '+ (2)', dur: 0.56 },
+    { tocar: '#mais', rotulo: '+ (3)', dur: 1.89 },
+    { tocar: '#atalhos > button:nth-of-type(3)', rotulo: 'atalho 5', dur: 0.67 },
+    { arrastar: { alvo: '#faixa', para: 10, dur: 1.50 }, rotulo: 'arrastar ate 10' },
+    { esperar: 13.56 },                       // os zooms acontecem na pos
+    { rolar: 760, dur: 2.60 },                // a barra flutuante aparece
+    { esperar: 2.07 },
   ]},
 
   // ---------- G07  Metas e progresso  (cena 7) ----------

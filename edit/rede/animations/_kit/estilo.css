@@ -59,7 +59,7 @@ html, body {
   position: absolute; display: flex; align-items: center; gap: 12px;
   padding: 11px 22px 11px 18px;
   background: #0F0D0A; border: 1px dashed var(--linha); border-radius: 17px;
-  color: var(--ouro-cl); font-size: 25px; font-weight: 600; white-space: nowrap;
+  color: var(--ouro-cl); font-size: 29px; font-weight: 600; white-space: nowrap;
 }
 .ender::before {
   content: ""; width: 13px; height: 13px; border-radius: 50%;
@@ -68,7 +68,8 @@ html, body {
 
 /* ---------- cursor: circulo dourado que encolhe no toque ---------- */
 .cursor {
-  position: absolute; width: 58px; height: 58px; margin: -29px 0 0 -29px;
+  position: absolute; left: 0; top: 0;
+  width: 58px; height: 58px; margin: -29px 0 0 -29px;
   border-radius: 50%; background: rgba(201,162,39,.30);
   border: 3px solid var(--ouro-cl); pointer-events: none; opacity: 0;
 }
