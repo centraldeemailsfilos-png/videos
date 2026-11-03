@@ -1,0 +1,11 @@
+<!-- A mao carimbada e o rabisco dourado, recortados da propria pagina
+     Rede Filos. Cole o bloco <defs> inteiro dentro do seu .clip e use
+     <use href="#mao"/> ou <use href="#traco"/>. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="aspero" x="-12%" y="-12%" width="124%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="4"/>
+    <feDisplacementMap in="SourceGraphic" scale="5"/>
+  </filter>
+  <symbol id="mao" viewBox="0 0 100 110"><g fill="currentColor"><rect x="24" y="50" width="54" height="54" rx="25"></rect><rect x="26" y="14" width="12" height="52" rx="6" transform="rotate(-7 32 40)"></rect><rect x="42" y="6" width="12" height="56" rx="6"></rect><rect x="58" y="10" width="12" height="54" rx="6" transform="rotate(5 64 40)"></rect><rect x="72" y="24" width="11" height="44" rx="5.5" transform="rotate(14 77 50)"></rect><rect x="6" y="52" width="13" height="42" rx="6.5" transform="rotate(-42 20 80)"></rect></g></symbol>
+  <symbol id="traco" viewBox="0 0 240 16" preserveAspectRatio="none"><path fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" d="M4 10c30-8 42 6 72 0s42-8 72-1 50 3 88-4"></path></symbol>
+</defs></svg>

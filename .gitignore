@@ -64,6 +64,8 @@ edit/rede/*
 edit/rede/align/*
 !edit/rede/align/*.py
 !edit/rede/align/*.json
+!edit/rede/align/dossies/
+!edit/rede/align/dossies/*.md
 !edit/rede/captura
 edit/rede/captura/*
 !edit/rede/captura/*.mjs
@@ -82,4 +84,6 @@ edit/rede/animations/*/*
 !edit/rede/animations/_kit/*.css
 !edit/rede/animations/_kit/*.js
 !edit/rede/animations/_kit/*.md
+!edit/rede/animations/_kit/*.svg
+!edit/rede/*.py
 edit/rede/animations/_teste/

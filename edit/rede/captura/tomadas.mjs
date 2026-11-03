@@ -20,162 +20,154 @@ const E = {
 };
 
 export const TOMADAS = [
-  // ---------- G00  mapa da rede  (cenas 2 e 12) ----------
+  /* As duracoes dos passos nao sao arbitrarias: cada toque e cada chegada
+   * de rolagem cai na palavra da narracao que a nomeia. Os tempos abaixo
+   * sao locais a cada cena e vem de edit/rede/align/briefing.json.       */
+
+  // ---------- G00  mapa da rede  (cenas 2 e 12; a 2 refaz o mapa em HTML) ----------
+  // cena 12 (21,80s): "ABC" 4.59 | "Corrente" 9.06 | "Escolinha" 14.09 | "casa" 20.30
   { id: 'G00', pagina: MAPA, endereco: E.mapa, passos: [
-    { esperar: 2.0 },
-    { rolar: '.mapa', folga: 150, dur: 2.6 },
-    { esperar: 9.0 },                         // post acende um bloco por vez
-    { rolar: '.cartao-link', folga: 90, dur: 2.8 },
-    { esperar: 3.0 },
-    { rolar: 2400, dur: 3.2 },
-    { esperar: 3.0 },
+    { esperar: 2.6 },
+    { rolar: '.cartao-link', folga: 90, dur: 2.0 },   // chega nas fichas em 4.6
+    { esperar: 4.4 },
+    { rolar: 2050, dur: 1.6 },                        // 9.0: ficha da Corrente
+    { esperar: 3.4 },
+    { rolar: 2700, dur: 1.6 },                        // 14.0: ficha da Escolinha
+    { esperar: 4.6 },
+    { rolar: 400,  dur: 2.0 },                        // 20.2: volta ao mapa, "casa"
+    { esperar: 1.6 },
   ]},
 
-  // ---------- G01  Filos Editora, primeira tela  (cenas 1 e 3) ----------
-  { id: 'G01', pagina: EDITORA, endereco: E.editora, passos: [
-    { esperar: 7.0 },
-  ]},
+  // ---------- S1a/b/c  primeiras telas paradas, lado a lado  (cena 1) ----------
+  { id: 'S1a', pagina: ABC,      endereco: E.abc,      passos: [{ esperar: 15 }] },
+  { id: 'S1b', pagina: CORRENTE, endereco: E.corrente, passos: [{ esperar: 15 }] },
+  { id: 'S1c', pagina: ANGOLA,   endereco: E.angola,   passos: [{ esperar: 15 }] },
 
-  // ---------- G02  Editora: menu -> Projetos sociais  (cena 3) ----------
+  // ---------- G01  Filos Editora, primeira tela  (cena 3, plano de apoio) ----------
+  { id: 'G01', pagina: EDITORA, endereco: E.editora, passos: [{ esperar: 11 }] },
+
+  /* ---------- G02  Editora: menu -> Projetos sociais  (cena 3) ----------
+   * "menu," 4.94 | "toca" 5.95 | "Projetos" 6.50 | "sociais" 7.14 | "ABC." 10.21
+   * Termina em 10,6s: dali a cena corta para a Filos ABC, e o resto vem da G03. */
   { id: 'G02', pagina: EDITORA, endereco: E.editora, passos: [
-    { esperar: 1.6 },
-    { tocar: '#hamburguer', rotulo: 'abrir o menu', dur: 1.4 },
-    { esperar: 1.2 },
+    { esperar: 4.94 },
+    { tocar: '#hamburguer', rotulo: 'abrir o menu', dur: 1.56 },
     { tocar: '#menuMovel > a:nth-of-type(3)', rotulo: 'Projetos sociais',
-      semNavegar: true, dur: 2.2 },
+      semNavegar: true, dur: 4.10 },
   ]},
 
-  // ---------- G03  Filos ABC: primeira tela e os tres projetos  (cena 4) ----------
-  { id: 'G03', pagina: ABC, endereco: E.abc, passos: [
-    { esperar: 2.4 },
-    { rolar: '#projetos', folga: 70, dur: 2.6 },
-    { esperar: 2.6 },
-    { rolar: 1700, dur: 2.2 },
-    { esperar: 2.4 },
-    { rolar: '#frentes', folga: 70, dur: 2.4 },
-    { esperar: 2.6 },
-    { rolar: 3000, dur: 2.4 },
-    { esperar: 2.0 },
-  ]},
+  // ---------- G03  Filos ABC, primeira tela  (cena 3, segunda metade) ----------
+  { id: 'G03', pagina: ABC, endereco: E.abc, passos: [{ esperar: 9.0 }] },
 
-  // ---------- G04  Dando Asas: Brasil e Cuba, depois Como ajudar  (cena 4) ----------
+  /* ---------- G04  o tour inteiro da Filos ABC  (cena 4, 27,40s) ----------
+   * "conhecer" 3.21 | "instituto" 6.50 | "Dando" 9.42 | "Asas" 9.87
+   * "ajudar," 15.85 | depois os quatro cartoes sao citados um a um, e a
+   * pagina fica parada numa altura em que os quatro cabem na tela.       */
   { id: 'G04', pagina: ABC, endereco: E.abc, passos: [
-    { avaliar: () => window.scrollTo(0, 5300) },
-    { esperar: 1.6 },
-    { rolar: '#paises', folga: 230, dur: 1.6 },
-    { esperar: 1.4 },
-    { tocar: '#paises > button:nth-of-type(1)',  rotulo: 'Brasil', dur: 2.6 },
-    { tocar: '#paises > button:nth-of-type(12)', rotulo: 'Cuba',   dur: 3.0 },
-    { rolar: '#doar', folga: 70, dur: 3.0 },
-    { esperar: 2.2 },
-    { rolar: 8300, dur: 2.6 },
-    { esperar: 2.4 },
+    { esperar: 4.10 },
+    { rolar: '#frentes', folga: 70,  dur: 2.40 },     // 6.50 "instituto"
+    { esperar: 2.12 },
+    { rolar: '#asas',    folga: 70,  dur: 1.25 },     // 9.87 "Asas"
+    { esperar: 0.80 },
+    { rolar: '#paises',  folga: 230, dur: 1.00 },
+    { esperar: 0.53 },
+    { tocar: '#paises > button:nth-of-type(1)',  rotulo: 'Brasil', dur: 1.20 },
+    { tocar: '#paises > button:nth-of-type(12)', rotulo: 'Cuba',   dur: 1.45 },
+    { rolar: 7899, dur: 1.00 },                       // 15.85 "ajudar"
+    { esperar: 11.55 },
   ]},
 
-  // ---------- G05  Corrente 300, primeira tela parada  (cenas 1, 5 e 6) ----------
-  { id: 'G05', pagina: CORRENTE, endereco: E.corrente, passos: [
-    { esperar: 6.0 },
-  ]},
+  // ---------- G05  Corrente 300, primeira tela parada  (cena 5) ----------
+  { id: 'G05', pagina: CORRENTE, endereco: E.corrente, passos: [{ esperar: 7.0 }] },
 
-  /* ---------- G06  Corrente: + ate 3, atalho 5, arrastar ate 10  (cena 6) ----------
-   * As duracoes nao sao arbitrarias: cada toque cai na palavra da
-   * narracao que o nomeia. Tempos locais da cena 6 (que comeca em
-   * 97,53s): "mais" 9.72 | "menos" 10.28 | "atalhos" 12.17 |
-   * "arrastando" 12.84 | "acompanha" 28.31. Total 32,57s, a cena inteira.
-   * #atalhos e a fileira 1/2/5/10/30; #vals sao os valores de doacao
-   * avulsa, bem mais abaixo na pagina.                                 */
+  // ---------- G06  a calculadora inteira  (cena 6, 32,57s) ----------
+  // "mais" 9.72 | "menos" 10.28 | "atalhos" 12.17 | "arrastando" 12.84
+  // "acompanha" 28.31.  #atalhos e a fileira 1/2/5/10/30; #vals sao os
+  // valores de doacao avulsa, bem mais abaixo na pagina.
   { id: 'G06', pagina: CORRENTE, endereco: E.corrente, passos: [
     { esperar: 9.72 },
     { tocar: '#mais', rotulo: '+ (2)', dur: 0.56 },
     { tocar: '#mais', rotulo: '+ (3)', dur: 1.89 },
     { tocar: '#atalhos > button:nth-of-type(3)', rotulo: 'atalho 5', dur: 0.67 },
     { arrastar: { alvo: '#faixa', para: 10, dur: 1.50 }, rotulo: 'arrastar ate 10' },
-    { esperar: 13.56 },                       // os zooms acontecem na pos
-    { rolar: 760, dur: 2.60 },                // a barra flutuante aparece
+    { esperar: 13.56 },
+    { rolar: 760, dur: 2.60 },
     { esperar: 2.07 },
   ]},
 
-  // ---------- G07  Metas e progresso  (cena 7) ----------
+  /* ---------- G07  metas e progresso  (cena 7, 23,06s) ----------
+   * "metas." 1.98 | "listrada" 8.08 | "pessoa:" 9.49 | "cozinha," 15.83  */
   { id: 'G07', pagina: CORRENTE, endereco: E.corrente, passos: [
     { avaliar: () => window.scrollTo(0, 1500) },
-    { esperar: 1.2 },
-    { rolar: '#metas', folga: 70, dur: 2.2 },
-    { esperar: 3.4 },                         // a barra principal cresce
-    { tocar: '#d-mais', rotulo: '+ na barra flutuante', dur: 1.0 },
-    { tocar: '#d-mais', rotulo: '+ na barra flutuante', dur: 2.4 },
-    { rolar: 2700, dur: 2.4 },                // metas da cozinha
-    { esperar: 3.0 },
-    { rolar: '#avulso', folga: 150, dur: 2.2 },
-    { esperar: 1.6 },
-    { tocar: '#avulso > a:nth-of-type(2)', rotulo: 'R$ 20', semNavegar: true, dur: 2.4 },
+    { esperar: 0.50 },
+    { rolar: '#metas', folga: 70, dur: 1.48 },        // 1.98 "metas"
+    { esperar: 6.10 },
+    { tocar: '#d-mais', rotulo: '+ na barra flutuante', dur: 0.70 },
+    { tocar: '#d-mais', rotulo: '+ na barra flutuante', dur: 0.71 },   // 9.49 "pessoa"
+    { esperar: 5.34 },
+    { rolar: 2700, dur: 1.00 },                       // 15.83 "cozinha"
+    { esperar: 4.17 },
+    { rolar: '#avulso', folga: 150, dur: 1.40 },
+    { esperar: 1.66 },
   ]},
 
-  // ---------- G08  Confianca: transparencia, caminho, regras, empresas  (cena 8) ----------
+  /* ---------- G08  confianca  (cena 8, 12,21s) ----------
+   * "contas," 5.29 | "passos" 6.95 | "regras" 8.81 | "empresas" 10.94   */
   { id: 'G08', pagina: CORRENTE, endereco: E.corrente, passos: [
     { avaliar: () => window.scrollTo(0, 3900) },
-    { esperar: 1.2 },
-    { rolar: '#transparencia', folga: 70, dur: 1.8 },
-    { esperar: 2.2 },
-    { rolar: '#caminho', folga: 70, dur: 2.0 },
-    { esperar: 2.0 },
-    { rolar: '#regras', folga: 70, dur: 2.0 },
-    { esperar: 1.2 },
-    { tocar: '#regras details:first-of-type summary', rotulo: 'abrir uma regra', dur: 2.4 },
-    { rolar: '#empresas', folga: 70, dur: 2.0 },
-    { esperar: 2.0 },
+    { esperar: 0.60 },
+    { rolar: '#transparencia', folga: 70, dur: 1.40 },
+    { esperar: 3.29 },
+    { rolar: '#caminho', folga: 70, dur: 1.66 },      // 6.95 "passos"
+    { esperar: 0.40 },
+    { rolar: '#regras',  folga: 70, dur: 1.46 },      // 8.81 "regras"
+    { tocar: '#regras details:first-of-type summary', rotulo: 'abrir uma regra', dur: 0.80 },
+    { rolar: '#empresas', folga: 70, dur: 1.33 },     // 10.94 "empresas"
+    { esperar: 1.27 },
   ]},
 
-  // ---------- G09  Escolinha: Todo mes e R$ 20  (cenas 1 e 9) ----------
+  /* ---------- G09  Escolinha em Angola  (cena 9, 22,46s) ----------
+   * "vez," 10.25 | "valor" 11.77 | "apoiar" 13.57 | "escola" 19.55       */
   { id: 'G09', pagina: ANGOLA, endereco: E.angola, passos: [
-    { esperar: 2.6 },
-    { rolar: 330, dur: 1.6 },
-    { esperar: 1.2 },
-    { tocar: '#tipo > button:nth-of-type(1)',    rotulo: 'Todo mês', dur: 2.2 },
-    { tocar: '#valores > button:nth-of-type(2)', rotulo: 'R$ 20',    dur: 3.0 },
-    { esperar: 2.4 },
-  ]},
-
-  // ---------- G10  Escolinha: o que faz e as fotos  (cena 9) ----------
-  { id: 'G10', pagina: ANGOLA, endereco: E.angola, passos: [
-    { avaliar: () => window.scrollTo(0, 900) },
-    { esperar: 1.2 },
-    { rolar: '#escola', folga: 70, dur: 2.2 },
-    { esperar: 3.0 },
-    { rolar: 1700, dur: 2.2 },
-    { esperar: 2.0 },
-    { rolar: '#fotos', folga: 70, dur: 2.4 },
-    { esperar: 3.4 },
+    { esperar: 2.60 },
+    { rolar: 330, dur: 1.40 },
+    { esperar: 5.40 },
+    { tocar: '#tipo > button:nth-of-type(1)',    rotulo: 'Todo mês', dur: 2.37 },
+    { tocar: '#valores > button:nth-of-type(2)', rotulo: 'R$ 20',    dur: 6.48 },
+    { rolar: '#escola', folga: 70, dur: 1.30 },       // 19.55 "escola"
+    { esperar: 0.60 },
+    { rolar: '#fotos',  folga: 70, dur: 1.50 },
+    { esperar: 0.81 },
   ]},
 
   // ---------- G11a/b/c  trocar de pagina pelas marcas do topo  (cena 10) ----------
   { id: 'G11a', pagina: ABC, endereco: E.abc, passos: [
-    { esperar: 1.6 },
-    { tocar: '.rede-marcas li:nth-child(2) a', rotulo: 'Corrente 300', semNavegar: true, dur: 1.8 },
+    { esperar: 1.6 }, { tocar: '.rede-marcas li:nth-child(2) a', rotulo: 'Corrente 300', semNavegar: true, dur: 1.8 },
   ]},
   { id: 'G11b', pagina: CORRENTE, endereco: E.corrente, passos: [
-    { esperar: 1.6 },
-    { tocar: '.rede-marcas li:nth-child(3) a', rotulo: 'Escolinha em Angola', semNavegar: true, dur: 1.8 },
+    { esperar: 1.6 }, { tocar: '.rede-marcas li:nth-child(3) a', rotulo: 'Escolinha em Angola', semNavegar: true, dur: 1.8 },
   ]},
   { id: 'G11c', pagina: ANGOLA, endereco: E.angola, passos: [
-    { esperar: 1.6 },
-    { tocar: '.rede-marcas li:nth-child(1) a', rotulo: 'Filos ABC', semNavegar: true, dur: 1.8 },
+    { esperar: 1.6 }, { tocar: '.rede-marcas li:nth-child(1) a', rotulo: 'Filos ABC', semNavegar: true, dur: 1.8 },
   ]},
 
   // ---------- G12  rodape "Conheca a rede inteira"  (cena 10) ----------
+  // a cena precisa do rodape de 13,58s ("fim") ate o fim, 24,22s
   { id: 'G12', pagina: ABC, endereco: E.abc, passos: [
     { avaliar: () => window.scrollTo(0, 8400) },
-    { esperar: 1.2 },
-    { rolar: '.rede-cartoes', folga: 120, dur: 2.6 },
-    { esperar: 5.5 },
+    { esperar: 0.60 },
+    { rolar: '.rede-cartoes', folga: 120, dur: 2.00 },
+    { esperar: 8.40 },
   ]},
 
-  // ---------- G13  espalhar: WhatsApp e Compartilhar  (cena 11) ----------
+  /* ---------- G13  espalhar a corrente  (cena 11, 12,15s) ----------
+   * "divulgar." 2.80 | "WhatsApp" 4.37 | "grupo." 6.69 | "compartilha" 8.22 */
   { id: 'G13', pagina: CORRENTE, endereco: E.corrente, passos: [
     { avaliar: () => window.scrollTo(0, 7300) },
-    { esperar: 1.4 },
-    { rolar: '#espalhe', folga: 70, dur: 1.8 },
-    { esperar: 1.4 },
-    { tocar: '#grupo', rotulo: 'Entrar no grupo', semNavegar: true, dur: 2.4 },
-    { tocar: '#fab-enviar', rotulo: 'Compartilhar', dur: 3.4 },
+    { esperar: 1.00 },
+    { rolar: '#espalhe', folga: 70, dur: 1.80 },      // 2.80 "divulgar"
+    { esperar: 3.89 },
+    { tocar: '#grupo',      rotulo: 'Entrar no grupo', semNavegar: true, dur: 1.53 },
+    { tocar: '#fab-enviar', rotulo: 'Compartilhar',    dur: 3.93 },
   ]},
 ];
