@@ -55,8 +55,11 @@ Ajudantes em `assets/kit.js`: `toque()`, `pincel()`, `entra()`, `sai()`.
 
 ### O arranjo que as cenas 2 e 6 fixaram
 
-- Celular à **esquerda** (`left: 240px; top: 90px; 434×940`), painel de
-  texto à **direita** a partir de `left: 870px`.
+- Celular à **esquerda**: caixa `left: 240px; top: 90px; 434×918`, borda
+  9px, e o `<video>` com **416×900**. A caixa é conteúdo + 2×borda
+  (`box-sizing: border-box`): se o vídeo tiver o tamanho da caixa ele
+  transborda 18px e é cortado pelo `overflow`. Painel de texto à
+  **direita** a partir de `left: 870px`.
 - Barra de endereço no **canto superior direito** (`#barra.ender`), fora
   do caminho do celular quando a câmera aproxima.
 - Painel: olho em Caveat Brush, título em Noto Serif, depois o conteúdo.
@@ -68,13 +71,13 @@ Aproxime **o celular inteiro, moldura junto** (`#fone`), nunca o
 conteúdo dentro dele. Escalando só o conteúdo, a tela corta no meio da
 palavra — telefone nenhum faz isso. O celular sangra para fora do
 quadro, que é como um close funciona. Na cena 6: `scale 1.42,
-x 43, y -284`. Uma aproximação por cena, não quatro: a cada movimento de
+x 43, y -261`. Uma aproximação por cena, não quatro: a cada movimento de
 câmera o olho reassenta.
 
 ### Coordenadas de toque
 
-O vídeo tem 390×844 CSS do site e entra escalado por **k = 940/844 =
-1,1137**. O JSON da gravação (`edit/rede/gravacoes/GNN.json`) traz `x` e
+O vídeo tem 390×844 CSS do site e entra escalado por **k = 416/390 =
+1,0667**. O JSON da gravação (`edit/rede/gravacoes/GNN.json`) traz `x` e
 `y` de cada toque em CSS do site; multiplique por `k`. O cursor e o
 pincel moram **dentro** de `#fone`, para acompanharem a câmera.
 

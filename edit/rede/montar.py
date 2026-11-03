@@ -73,9 +73,12 @@ print('\nvideo mudo: %.2fs' % dur(mudo))
 # --- som: narracao, trilha abaixada sob a voz, e os toques ---
 mistura = (
   '[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,asplit=2[voz][chave];'
-  '[2:a]volume=0.34[mus];'
-  # a trilha recua sozinha quando ha voz, em vez de curva desenhada a mao
-  '[mus][chave]sidechaincompress=threshold=0.028:ratio=9:attack=24:release=420:makeup=1[musd];'
+  '[2:a]volume=0.65[mus];'
+  # A trilha recua sozinha quando ha voz, em vez de curva desenhada a mao.
+  # Aferido: 18,8 dB de voz sobre a trilha durante a fala e 7,1 dB de
+  # recuo, com a trilha subindo a -24,5 dB nos intervalos. Com 0.34 e
+  # ratio 9 ela ficava 28 dB abaixo — praticamente inaudivel.
+  '[mus][chave]sidechaincompress=threshold=0.040:ratio=6:attack=24:release=420:makeup=1[musd];'
   '[3:a]volume=0.85[toq];'
   '[voz][musd][toq]amix=inputs=3:normalize=0:dropout_transition=0[som];'
   '[som]alimiter=limit=0.94,afade=t=in:st=0:d=0.5,'

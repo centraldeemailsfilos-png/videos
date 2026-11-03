@@ -1,59 +1,218 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/fontes/fontes.css" />
+    <link rel="stylesheet" href="assets/estilo.css" />
     <style>
-      /* Placeholders: replace all three with the film's own palette and display face. */
-      :root {
-        --ground: #000;
-        --ink: #ffffff;
-        --font-display: sans-serif;
+      /* Mesmas medidas das cenas 2 e 6: caixa 434x918 = video 416x900
+         mais 9px de borda de cada lado. O G04 tem 390x844 CSS do site e
+         entra escalado por k = 416/390 = 1,0667 — e todo x/y do
+         G04.json e multiplicado por esse k. */
+      #fone { left: 240px; top: 90px; width: 434px; height: 918px; }
+      #fone video { width: 416px; height: 900px; }
+
+      /* a barra mora no canto superior direito: quando a camera
+         aproxima, o celular sangra para cima e passaria por cima dela */
+      #barra { right: 130px; top: 44px; }
+
+      .cursor { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+      .cursor::after { inset: 15px; }
+
+      /* o pincel e o cursor ficam DENTRO de #fone, para acompanharem a
+         aproximacao em vez de descolarem da tela */
+      #pincel { left: 0; top: 0; width: 416px; height: 900px; opacity: 0; }
+      #pincel path { stroke-width: 6; }
+
+      /* ---------- painel a direita ---------- */
+      /* altura explicita: os blocos absolutos la dentro (tour, sub,
+         cartoes) precisam caber na caixa do pai, senao o layout acusa
+         escaped_container */
+      #painel { position: absolute; left: 870px; top: 110px; width: 910px; height: 890px; }
+      #olho { opacity: 0; margin-bottom: 10px; }
+      #tit  { opacity: 0; font-size: 60px; }
+
+      /* bloco A: o que a pagina mostra. Nao sai de cena — o painel
+         acumula, em vez de trocar de conteudo no meio. Troca exigiria
+         uma saida e uma entrada coladas, e o olho perde o fio. */
+      #tour { position: absolute; top: 190px; width: 100%; }
+      .linha-tour { display: flex; align-items: center; gap: 22px; opacity: 0; }
+      .linha-tour + .linha-tour { margin-top: 16px; }
+      .risco { flex: none; width: 34px; height: 3px; background: var(--ouro); }
+      .linha-tour span.txt { color: var(--creme); font-size: 40px; line-height: 1.25; }
+
+      /* bloco B: as quatro formas de ajudar */
+      #sub {
+        position: absolute; top: 365px; width: 100%; opacity: 0;
+        border-top: 2px solid var(--linha); padding-top: 32px;
+        color: var(--suave); font-size: 36px; line-height: 1.38;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      #sub b { color: var(--ouro-cl); font-weight: 700; }
+
+      #cartoes { position: absolute; top: 470px; width: 100%; }
+      .forma {
+        display: flex; align-items: center; gap: 24px;
+        padding: 16px 28px; margin-bottom: 16px;
+        border: 2px solid var(--linha); border-radius: 18px;
+        background: rgba(201, 162, 39, 0);
+        opacity: 0;
       }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: var(--ground);
+      .ponto {
+        flex: none; width: 22px; height: 22px; border-radius: 50%;
+        border: 3px solid var(--linha); background: rgba(201, 162, 39, 0);
       }
-      #root {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
-      }
-      #title {
-        color: var(--ink);
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-      }
+      .rot { color: var(--suave); font-size: 42px; font-weight: 600; line-height: 1.2; }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      <h1 id="title" class="clip" data-start="0" data-duration="10" data-track-index="0">Title</h1>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="27.40"
+         data-width="1920" data-height="1080">
+      <div id="cena" class="clip">
+        <div class="palco"></div>
+        <div class="vinheta"></div>
+
+        <!-- defs de assets/simbolos.svg: o filtro que da aspereza ao pincel -->
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+          <filter id="aspero" x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="4"/>
+            <feDisplacementMap in="SourceGraphic" scale="5"/>
+          </filter>
+        </defs></svg>
+
+        <div id="barra" class="ender">filosabc.filoseditora.com.br</div>
+
+        <div id="fone" class="fone">
+          <video id="tela" src="assets/G04.mp4" muted
+                 data-start="0" data-duration="27.40"></video>
+          <!-- oval em volta do cartao de resultado do pais
+               (CSS 16..374 x 518..672 → px do video 17..399 x 553..717) -->
+          <svg id="pincel" class="pincel" viewBox="0 0 416 900">
+            <path d="M 14,635 C 14,584 101,543 208,543 C 315,543 402,584 402,635
+                     C 402,686 315,727 208,727 C 101,727 14,686 14,635
+                     C 14,607 54,579 121,561"/>
+          </svg>
+          <div id="cursor" class="cursor"></div>
+        </div>
+
+        <div id="painel">
+          <p id="olho" class="mao">Tour pela página</p>
+          <h2 id="tit" class="titulo"><em>Filos&nbsp;ABC</em>: para conhecer tudo</h2>
+
+          <div id="tour">
+            <div class="linha-tour" id="t1">
+              <span class="risco"></span><span class="txt">o que o instituto faz</span>
+            </div>
+            <div class="linha-tour" id="t2">
+              <span class="risco"></span><span class="txt">o projeto Dando Asas à Imaginação</span>
+            </div>
+          </div>
+
+          <p id="sub">Em <b>Como ajudar</b>, a pessoa escolhe:</p>
+
+          <div id="cartoes">
+            <div class="forma" id="f1"><span class="ponto"></span><span class="rot">Apadrinhar</span></div>
+            <div class="forma" id="f2"><span class="ponto"></span><span class="rot">Apoiar a escolinha</span></div>
+            <div class="forma" id="f3"><span class="ponto"></span><span class="rot">Contratar uma oficina</span></div>
+            <div class="forma" id="f4"><span class="ponto"></span><span class="rot">Levar a sua empresa</span></div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <script src="assets/kit.js"></script>
     <script>
+      /* Cena 4 — Tour pela Filos ABC. 27,40 s, a mais longa do video.
+       * Tempos locais, do alinhamento palavra a palavra (dossie):
+       *   "conhecer" 3.21 | "instituto" 6.50 | "Dando" 9.42 | "Asas" 9.87
+       *   "feito" 13.15 | "cada" 14.20 | "país." 14.67 | "ajudar," 15.85
+       *   "pessoa" 17.46 | "escolhe:" 18.51 | "apadrinhar," 19.13
+       *   "escolinha," 21.60 | "oficina" 23.70 | "empresa." 26.81
+       * A gravacao G04 foi feita nestes tempos: rolagens em 4.10, 8.63,
+       * 10.70 e 14.90; toques em Brasil 12.233 e Cuba 13.433.
+       */
+      const k = 1.0667;                    // CSS do site -> px da composicao
+      const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
+      const BRASIL = P(55, 252);           // G04.json, toque 1
+      const CUBA   = P(53, 468);           // G04.json, toque 2
+
+      const OURO = "#C9A227", LINHA = "#3A3226",
+            CREME = "#F1E8D9", SUAVE = "#A99C88";
+
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.fromTo("#title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0);
+
+      /* Um dono so para o transform: a escala inicial do celular nasce
+         aqui no GSAP, nunca no CSS, senao o primeiro tween a sobrescreve. */
+      gsap.set("#fone", { scale: 1, x: 0, y: 0 });
+      tl.set("#fone", { scale: 1, x: 0, y: 0 }, 0);
+      tl.set("#cursor", { x: BRASIL.x, y: BRASIL.y + 110, opacity: 0 }, 0);
+
+      /* --- painel, bloco A: o que a pagina mostra ------------------- */
+      // entrada dura ~0,6s e comeca ~0,5s antes da palavra, para o quadro
+      // de chegada cair em cima dela.
+      entra(tl, "#olho", 0.80);            // "A Filos ABC e a pagina" 0.28
+      entra(tl, "#tit",  2.71);            // chega em "conhecer" 3.21
+      entra(tl, "#t1",   6.00);            // chega em "instituto" 6.50
+      entra(tl, "#t2",   8.92);            // chega em "Dando" 9.42
+
+      /* --- camera: UMA aproximacao, no seletor de paises ------------- */
+      /* Aproxima o celular INTEIRO, moldura junto. Com escala 1,62 e
+         deslocamento (18,15) o quadro mostra o CSS y 96..720 do site:
+         o titulo "Toque em um pais", a grade das 12 fichas e o cartao de
+         resultado — exatamente o que a narracao chama de "o que ja foi
+         feito em cada pais". A rolagem do G04 chega ao seletor em 10,70;
+         a aproximacao comeca em 11,00, no rabo dela, e assenta em 11,90,
+         antes do toque em Brasil (12,233). Volta ao plano aberto a partir
+         de 14,40, para os cartoes de "Como ajudar" entrarem com o celular
+         de novo inteiro no quadro. */
+      tl.to("#fone", { scale: 1.62, x: 18, y: 15,
+                       duration: 0.90, ease: "power2.inOut" }, 11.00);
+      tl.to("#fone", { scale: 1.00, x:  0, y:  0,
+                       duration: 0.90, ease: "power2.inOut" }, 14.40);
+
+      /* --- toques, nos tempos da propria gravacao -------------------- */
+      let onde = { x: BRASIL.x, y: BRASIL.y + 110 };
+      onde = toque(tl, { ...BRASIL, em: 12.233, vindoDe: onde, aproxima: 0.45 });
+      onde = toque(tl, { ...CUBA,   em: 13.433, vindoDe: onde, aproxima: 0.60 });
+
+      /* O pincel circula o cartao de resultado logo depois do toque em
+         Brasil; o cartao troca para Cuba dentro do mesmo circulo em
+         13,433, que e justamente o ponto ("em cada pais"). Apaga antes
+         de a camera comecar a voltar. */
+      pincel(tl, "#pincel", 12.70, 1.45);  // desenha 12.45–13.07, some 13.90–14.35
+      tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 13.85);
+
+      /* --- painel, bloco B: as quatro formas de ajudar --------------- */
+      entra(tl, "#sub", 15.35);            // chega em "ajudar," 15.85
+
+      /* Os quatro cartoes entram apagados, em cascata, sob "a pessoa
+         escolhe:" (17.14–18.51). Cascata e sequencia, nao paralelo: um
+         de cada vez, 0,26s de intervalo. O ultimo assenta em 18.63,
+         meio segundo antes de "apadrinhar,". */
+      tl.fromTo(".forma", { opacity: 0, y: 26 },
+                { opacity: 1, y: 0, duration: 0.50, ease: "power3.out",
+                  stagger: 0.26 }, 17.35);
+
+      /* Acender = a ficha ganha borda e fundo dourados, o texto vira
+         creme, o ponto enche e o cartao avanca 16px. Comeca 0,25s antes
+         da palavra para o estado cheio bater em cima dela. */
+      function acende(tl, id, em) {
+        const t = em - 0.25, d = 0.45;
+        tl.fromTo(id, { borderColor: LINHA, backgroundColor: "rgba(201,162,39,0)", x: 0 },
+                      { borderColor: OURO,  backgroundColor: "rgba(201,162,39,0.10)", x: 16,
+                        duration: d, ease: "power2.out" }, t);
+        tl.fromTo(id + " .ponto", { borderColor: LINHA, backgroundColor: "rgba(201,162,39,0)", scale: 1 },
+                                  { borderColor: OURO,  backgroundColor: OURO, scale: 1.15,
+                                    duration: d, ease: "power2.out" }, t);
+        tl.fromTo(id + " .rot", { color: SUAVE }, { color: CREME, duration: d, ease: "power2.out" }, t);
+      }
+      acende(tl, "#f1", 19.13);            // "apadrinhar,"
+      acende(tl, "#f2", 21.60);            // "escolinha,"
+      acende(tl, "#f3", 23.70);            // "oficina"
+      acende(tl, "#f4", 26.81);            // "empresa." — ultima palavra da cena
+
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>

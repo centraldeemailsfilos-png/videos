@@ -1,59 +1,160 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/fontes/fontes.css" />
+    <link rel="stylesheet" href="assets/estilo.css" />
     <style>
-      /* Placeholders: replace all three with the film's own palette and display face. */
-      :root {
-        --ground: #000;
-        --ink: #ffffff;
-        --font-display: sans-serif;
-      }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: var(--ground);
-      }
-      #root {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
-      }
-      #title {
-        color: var(--ink);
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-      }
+      /* Mesmo arranjo das cenas 2 e 6: celular a esquerda, painel a
+         direita, barra de endereco no canto superior direito.
+         A caixa do celular e conteudo + 2x borda: 416+18 = 434 de
+         largura e 900+18 = 918 de altura. O video da gravacao tem
+         390x844 CSS do site, entao k = 416/390 = 1,0667 converte
+         qualquer coordenada do JSON da gravacao em px da composicao. */
+      #fone  { left: 240px; top: 90px; width: 434px; height: 918px; }
+      #fone video { width: 416px; height: 900px; }
+      /* a barra fica em cima a direita: quando a camera aproxima o
+         celular sangra para fora do quadro e passaria por cima dela */
+      #barra { right: 118px; top: 44px; }
+
+      /* cursor e pincel moram DENTRO do #fone, para acompanharem a
+         camera em vez de descolar da tela quando ela aproxima */
+      .cursor { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+      .cursor::after { inset: 15px; }
+
+      #pincel { left: 0; top: 0; width: 416px; height: 900px; opacity: 0; }
+      /* o botao circulado e dourado: um traco dourado por cima dele
+         some. Nesta cena o pincel e creme, que le bem tanto sobre o
+         botao quanto sobre o fundo escuro do celular. */
+      #pincel path { stroke: var(--creme); stroke-width: 6; }
+
+      #painel { position: absolute; left: 870px; top: 200px; width: 910px; }
+      #olho   { opacity: 0; margin-bottom: 10px; }
+      #tit    { opacity: 0; margin-bottom: 40px; }
+      #linha1 { opacity: 0; color: var(--creme); font-size: 52px;
+                font-weight: 700; line-height: 1.2; }
+
+      /* os dois blocos do fim da pagina, que entram durante a rolagem */
+      #fim    { margin-top: 118px; }
+      .fim    { display: flex; align-items: center; gap: 24px;
+                margin-bottom: 30px; opacity: 0; }
+      .fim i  { flex: none; display: block; width: 46px; height: 5px;
+                border-radius: 3px; background: var(--ouro); }
+      .fim span { color: var(--suave); font-size: 42px; line-height: 1.25; }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      <h1 id="title" class="clip" data-start="0" data-duration="10" data-track-index="0">Title</h1>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="22.46"
+         data-width="1920" data-height="1080">
+      <div id="cena" class="clip">
+        <div class="palco"></div>
+        <div class="vinheta"></div>
+
+        <svg width="0" height="0" aria-hidden="true"><defs>
+          <filter id="aspero" x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="5"/>
+            <feDisplacementMap in="SourceGraphic" scale="4"/>
+          </filter>
+        </defs></svg>
+
+        <div id="barra" class="ender">projetosocialangola.filoseditora.com.br</div>
+
+        <!-- o celular e um div SEM data-start; quem tem data-start e o
+             video dentro dele (os dois juntos discordariam e o extrator
+             de quadros le o do video) -->
+        <div id="fone" class="fone">
+          <video id="tela" src="assets/G09.mp4" muted
+                 data-start="0" data-duration="22.433"></video>
+          <!-- traco de pincel em volta do botao "Quero apoiar a
+               escolinha": medido no quadro 13,57 da propria gravacao,
+               o botao vai de x 38..351 e y 513..619 em CSS do site, ou
+               seja x 41..374 e y 547..660 px de composicao. A elipse
+               tem centro (207,600) e raios 182x70, entao sobra folga
+               de ~15px em volta do botao sem alcancar a linha do
+               "O pagamento e feito..." logo abaixo dele.            -->
+          <svg id="pincel" class="pincel" viewBox="0 0 416 900">
+            <path d="M 25,599 C 25,548 109,530 207,530 C 305,530 389,548 389,599
+                     C 389,649 305,670 207,670 C 109,670 25,649 25,599
+                     C 25,569 63,546 131,534"/>
+          </svg>
+          <div id="cursor" class="cursor"></div>
+        </div>
+
+        <div id="painel">
+          <p  id="olho" class="mao">Escolinha em Angola</p>
+          <h2 id="tit" class="titulo">Link <em>próprio</em>:</h2>
+          <p  id="linha1">doar todo mês ou uma vez</p>
+          <div id="fim">
+            <div class="fim" id="fim1"><i></i><span>O que acontece na escola</span></div>
+            <div class="fim" id="fim2"><i></i><span>As fotos do projeto</span></div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <script src="assets/kit.js"></script>
     <script>
+      /* Cena 9 — 22,46 s. Comeca em 166,31s da narracao; aqui tudo e
+         local. Tempos palavra a palavra do dossie:
+           "Escolinha" 0.25 | "Angola" 1.75 | "link" 3.18 | "vez," 10.25
+           "valor" 11.77 | "apoiar" 13.57 | "escola" 19.55 | "fotos" 20.74
+         A G09 ja foi gravada nestes tempos: toca "Todo mes" em 9,40 e
+         "R$ 20" em 11,767, e rola em 18,233 e 20,133.                  */
+      const k = 1.0667;                       // CSS do site -> px da composicao
+      const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
+      const TODO_MES = P(114, 227);           // botao "Todo mes"  (G09.json)
+      const VALOR_20 = P(276, 338);           // botao "R$ 20"     (G09.json)
+      /* o cursor descansa na ponta esquerda do botao, nao no meio:
+         no meio ele taparia "Quero apoiar a escolinha" justo no
+         instante em que a narracao le o botao */
+      const BOTAO    = P(88, 566);            // "Quero apoiar a escolinha"
+
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.fromTo("#title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0);
+
+      /* A camera e o celular INTEIRO, moldura junto — nunca o conteudo
+         dentro dele, que cortaria a tela no meio da palavra. O cartao de
+         doacao fica em y 133..690 do site; com escala 1,42 e deslocamento
+         (44, 7) ele cai centrado no quadro e o celular sangra para fora,
+         que e como um close funciona. Uma aproximacao so na cena: a cada
+         movimento de camera o olho reassenta.
+         A escala inicial e do GSAP, nao do CSS — com os dois mexendo no
+         transform o GSAP sobrescreve e o celular volta ao tamanho.     */
+      gsap.set("#fone", { scale: 1, x: 0, y: 0 });
+      tl.set("#fone", { scale: 1, x: 0, y: 0 }, 0);
+      tl.set("#cursor", { x: TODO_MES.x, y: TODO_MES.y + 110, opacity: 0 }, 0);
+
+      /* painel: cada entrada dura 0,62s e comeca 0,5s antes da palavra,
+         para o quadro de chegada cair em cima dela */
+      entra(tl, "#olho", 0.00);               // "Escolinha" 0.25 / "Angola" 1.75
+      entra(tl, "#tit",  3.18 - 0.50);        // "link" 3.18
+
+      // aproxima no cartao de doacao e segura ate depois do pincel
+      tl.to("#fone", { scale: 1.42, x: 44, y: 7, duration: 0.85, ease: "power2.inOut" }, 8.50);
+
+      let onde = { x: TODO_MES.x, y: TODO_MES.y + 110 };
+      onde = toque(tl, { ...TODO_MES, em:  9.40, vindoDe: onde, aproxima: 0.70 });
+
+      entra(tl, "#linha1", 10.25 - 0.50);     // "vez," 10.25
+
+      onde = toque(tl, { ...VALOR_20, em: 11.77, vindoDe: onde, aproxima: 0.55 });
+
+      /* "e toca em Quero apoiar a escolinha": o cursor chega no botao em
+         "Quero" (12,97) e o pincel circula em "apoiar" (13,57). Sem pulso
+         de toque — a gravacao nao clica, para nao navegar para o Asaas. */
+      tl.to("#cursor", { x: BOTAO.x, y: BOTAO.y, duration: 0.52, ease: "power3.inOut" }, 12.45);
+      pincel(tl, "#pincel", 13.57, 2.20);     // desenha 13,32..13,94; apaga em 15,52
+      tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 15.75);
+
+      // volta ao plano aberto antes da rolagem da gravacao (18,233)
+      tl.to("#fone", { scale: 1.00, x: 0, y: 0, duration: 0.90, ease: "power2.inOut" }, 17.30);
+
+      entra(tl, "#fim1", 19.55 - 0.50);       // "escola" 19.55
+      entra(tl, "#fim2", 20.74 - 0.50);       // "fotos"  20.74
+      // ultimo quadro segura 1,6s ate o corte
+
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>

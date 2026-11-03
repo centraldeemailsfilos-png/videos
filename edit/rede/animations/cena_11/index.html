@@ -1,59 +1,232 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/fontes/fontes.css" />
+    <link rel="stylesheet" href="assets/estilo.css" />
     <style>
-      /* Placeholders: replace all three with the film's own palette and display face. */
-      :root {
-        --ground: #000;
-        --ink: #ffffff;
-        --font-display: sans-serif;
+      /* Mesma caixa de celular das cenas 2, 3 e 6: 434x918 com borda de 9px,
+         o que deixa 416x900 de conteudo. A G13 tem 390x844 CSS do site, entao
+         entra escalada por k = 416/390 = 1,0667 — e toda coordenada de toque
+         do G13.json e multiplicada por esse mesmo k. */
+      #fone { left: 240px; top: 90px; width: 434px; height: 918px; }
+      #fone video { width: 416px; height: 900px; }
+
+      /* a barra de endereco fica no canto superior direito, fora do caminho
+         do celular: na aproximacao ele sangra para fora do quadro e passaria
+         por cima dela se estivesse logo acima */
+      #barra { right: 130px; top: 44px; }
+
+      /* cursor menor que o padrao, como nas cenas 3 e 6: ele mora dentro de
+         #fone e a aproximacao da camera tambem o amplia */
+      .cursor { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+      .cursor::after { inset: 15px; }
+
+      /* os dois tracos de pincel moram DENTRO de #fone, para acompanharem o
+         zoom em vez de descolarem da tela */
+      #pincel, #pincel2 {
+        position: absolute; left: 0; top: 0; width: 416px; height: 900px;
+        opacity: 0; overflow: visible;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      #pincel path, #pincel2 path {
+        fill: none; stroke: var(--ouro); stroke-width: 7;
+        stroke-linecap: round; stroke-linejoin: round; filter: url(#aspero);
       }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: var(--ground);
-      }
-      #root {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
-      }
-      #title {
-        color: var(--ink);
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-      }
+
+      /* ---------- painel da direita ---------- */
+      #painel { position: absolute; left: 870px; top: 268px; width: 910px; }
+      #olho   { opacity: 0; margin-bottom: 10px; }
+      #tit    { opacity: 0; margin-bottom: 48px; }
+
+      /* os dois itens repetem os dois botoes flutuantes da pagina: o verde do
+         WhatsApp e o circulo vazado de compartilhar. O olho liga painel e
+         tela sem precisar de seta. */
+      .item { display: flex; align-items: flex-start; gap: 28px;
+              margin-bottom: 46px; opacity: 0; }
+      .item .ico { flex: none; width: 78px; height: 78px; border-radius: 50%;
+                   display: flex; align-items: center; justify-content: center; }
+      .item .ico svg { width: 44px; height: 44px; }
+      .ico.wa { background: #128C4A; }
+      .ico.sh { background: var(--fundo2); border: 2px solid var(--ouro); }
+      .item .nome { color: var(--creme); font-size: 52px; font-weight: 700;
+                    line-height: 1.1; }
+      .item .sub  { color: var(--suave); font-size: 34px; line-height: 1.32;
+                    margin-top: 8px; }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      <h1 id="title" class="clip" data-start="0" data-duration="10" data-track-index="0">Title</h1>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12.15"
+         data-width="1920" data-height="1080">
+      <div id="cena" class="clip">
+        <div class="palco"></div>
+        <div class="vinheta"></div>
+
+        <svg width="0" height="0" aria-hidden="true"><defs>
+          <filter id="aspero" x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7"/>
+            <feDisplacementMap in="SourceGraphic" scale="4"/>
+          </filter>
+        </defs></svg>
+
+        <div id="barra" class="ender">corrente300.filoseditora.com.br</div>
+
+        <div id="fone" class="fone">
+          <!-- o <video> precisa de id proprio: sem ele o renderizador nao
+               descobre a midia e o quadro sai congelado, sem aviso nenhum.
+               O data-start vai no video, nunca tambem no involucro (#fone). -->
+          <video id="tela" src="assets/G13.mp4" muted
+                 data-start="0" data-duration="12.15"></video>
+
+          <!-- Traco 1: o botao flutuante do WhatsApp. No CSS do site ele e
+               54x54 com centro em (353, 727) — conferido num quadro da G13 —,
+               o que da centro (377, 776) e caixa (348,747)-(406,805) depois do
+               k. O laco abre ~10px em volta e para em 410, porque o conteudo
+               termina em 416 e .fone corta o que passa disso. -->
+          <svg id="pincel" viewBox="0 0 416 900">
+            <path d="M 334,776 C 334,750 351,736 372,736
+                     C 393,736 410,750 410,776
+                     C 410,802 393,816 372,816
+                     C 351,816 334,802 334,776
+                     C 334,758 345,745 362,739"/>
+          </svg>
+
+          <!-- Traco 2: a janela de compartilhar que o toque em 8,23 abre. No
+               CSS do site ela ocupa (90,375)-(380,632), ou seja
+               (96,400)-(405,674) depois do k. O laco corre por fora, com
+               folga maior a esquerda do que a direita — do lado direito so
+               sobram 11px ate a borda da tela. -->
+          <svg id="pincel2" viewBox="0 0 416 900">
+            <path d="M 116,390 L 381,392 C 401,393 411,404 411,424
+                     L 410,652 C 410,672 398,684 378,685
+                     L 118,683 C 98,682 86,671 86,651
+                     L 87,422 C 87,402 98,391 116,390
+                     C 132,389 164,390 202,391"/>
+          </svg>
+
+          <div id="cursor" class="cursor"></div>
+        </div>
+
+        <div id="painel">
+          <p id="olho" class="mao">Espalhe a corrente</p>
+          <h2 id="tit" class="titulo">Dois botões <em>flutuantes</em></h2>
+
+          <div class="item" id="i1">
+            <span class="ico wa">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3.2c-5 0-9 3.4-9 7.6 0 2.3 1.1 4.3 3 5.7l-.9 3.7 3.9-2.1c.9.2 1.9.3 3 .3 5 0 9-3.4 9-7.6s-4-7.6-9-7.6z" fill="#fff"/>
+                <circle cx="8.2" cy="10.8" r="1.3" fill="#128C4A"/>
+                <circle cx="12"  cy="10.8" r="1.3" fill="#128C4A"/>
+                <circle cx="15.8" cy="10.8" r="1.3" fill="#128C4A"/>
+              </svg>
+            </span>
+            <div>
+              <p class="nome">WhatsApp</p>
+              <p class="sub">leva ao grupo da Corrente 300</p>
+            </div>
+          </div>
+
+          <div class="item" id="i2">
+            <span class="ico sh">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                   stroke="#DDBB6E" stroke-width="1.9" stroke-linecap="round">
+                <circle cx="17.3" cy="5.6" r="2.6"/>
+                <circle cx="6.7"  cy="12"  r="2.6"/>
+                <circle cx="17.3" cy="18.4" r="2.6"/>
+                <path d="M9.1 10.7 14.9 7.1"/>
+                <path d="M9.1 13.3 14.9 16.9"/>
+              </svg>
+            </span>
+            <div>
+              <p class="nome">Compartilhar</p>
+              <p class="sub">manda o link da página aberta</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <script src="assets/kit.js"></script>
     <script>
+      /* Cena 11 — Espalhar a corrente. 12,15 s.
+         Vai de 213,18s a 225,33s na narracao completa; aqui tudo e local.
+         Tempos de palavra, do alinhamento (nada aqui e estimado):
+           "flutuantes" 0.73 | "divulgar." 2.80 | "WhatsApp" 4.37
+           "grupo." 6.69 | "compartilha" 8.22 | "link" 9.41
+         A G13 foi gravada com estes mesmos tempos dentro: ela chega na secao
+         "Espalhe a corrente" em 2,80, toca "Entrar no grupo" em 6,70 e o
+         flutuante "Compartilhar" em 8,233.                                */
+      const k = 1.0667;                       // CSS do site -> px da composicao
+      const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
+      const GRUPO  = P(195, 366);             // toque do G13.json: #grupo
+      const ENVIAR = P(353, 665);             // toque do G13.json: #fab-enviar
+
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.fromTo("#title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0);
+
+      /* Um dono so para o transform: o CSS nao toca em #fone e a escala
+         inicial entra por gsap.set + tl.set(...,0). */
+      gsap.set("#fone", { scale: 1, x: 0, y: 0 });
+      tl.set("#fone", { scale: 1, x: 0, y: 0 }, 0);
+      tl.set("#cursor", { x: GRUPO.x, y: GRUPO.y + 80, opacity: 0 }, 0);
+
+      // "Os botoes flutuantes" (0,73): olho e titulo, um de cada vez.
+      entra(tl, "#olho", 0.30);               // chega em 0,92
+      entra(tl, "#tit",  0.95);               // chega em 1,57
+
+      /* Camera: uma unica aproximacao, comecando em "divulgar" (2,80) e
+         mirando o canto dos botoes flutuantes — e o celular inteiro, moldura
+         junto, que cresce e sangra para fora do quadro. Em escala 1,35 com
+         deslocamento (-30,-300) o flutuante do WhatsApp cai perto do centro
+         do quadro, e o celular ainda termina em x=720, longe do painel. */
+      tl.to("#fone", { scale: 1.35, x: -30, y: -300,
+                       duration: 0.80, ease: "power2.inOut" }, 2.70);
+
+      // "WhatsApp" (4,37): primeiro acende o item do painel, chegando em cima
+      // da palavra; so depois o pincel circula o botao na tela. Nunca os dois
+      // ao mesmo tempo — o olho vai do texto para o celular.
+      entra(tl, "#i1", 3.75);                 // chega em 4,37
+      pincel(tl, "#pincel", 4.62, 1.10);      // traca 4,37→4,99, apaga 5,47→5,92
+
+      /* Volta da camera antes do toque no botao do grupo, que fica no meio da
+         tela e ficaria fora do quadro no close. O traco se desfaz junto com o
+         recuo, em vez de sumir sozinho. */
+      tl.to("#fone", { scale: 1, x: 0, y: 0,
+                       duration: 0.72, ease: "power2.inOut" }, 5.45);
+
+      // "grupo." (6,69): o toque da propria gravacao e em 6,70.
+      let onde = { x: GRUPO.x, y: GRUPO.y + 80 };
+      onde = toque(tl, { ...GRUPO, em: 6.70, vindoDe: onde, aproxima: 0.45 });
+
+      /* "O outro" (7,49/7,75): o cursor atravessa ate o flutuante enquanto a
+         narracao muda de botao, para que em "compartilha" so falte o toque. */
+      tl.to("#cursor", { x: ENVIAR.x, y: ENVIAR.y,
+                         duration: 0.62, ease: "power3.inOut" }, 7.05);
+
+      // "compartilha" (8,22): item 2 acende na palavra; o toque da gravacao e
+      // em 8,233 e e ele que abre a janela de opcoes.
+      entra(tl, "#i2", 7.60);                 // chega em 8,22
+      toque(tl, { ...ENVIAR, em: 8.23, aproxima: 0.26 });
+
+      // o cursor sai de cena para nao ficar sentado em cima da janela aberta
+      tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 8.62);
+
+      /* "link" (9,41): a janela ja esta aberta, entao o segundo traco circula
+         ela inteira. Fica ate o fim — e o quadro final da cena, segurado por
+         2,4 s antes do corte. Por isso nao usa o pincel() do kit, que sempre
+         agenda um apagamento. */
+      (function () {
+        const p = document.querySelector("#pincel2 path");
+        const L = p.getTotalLength();
+        p.style.strokeDasharray = L;
+        p.style.strokeDashoffset = L;
+        tl.set("#pincel2", { opacity: 1 }, 9.10);
+        tl.fromTo(p, { strokeDashoffset: L },
+                     { strokeDashoffset: 0, duration: 0.62,
+                       ease: "power2.inOut" }, 9.10);
+      })();
+
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>

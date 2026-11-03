@@ -43,7 +43,9 @@
                      stroke-linecap: round; filter: url(#aspero); }
 
       /* ---------- painel da direita ---------- */
-      #painel { position: absolute; left: 870px; top: 196px; width: 910px; }
+      /* top 248 e nao 196: com o remate no fim, o bloco todo vai de 248 a
+         ~827, o que deixa o painel centrado em y no quadro. */
+      #painel { position: absolute; left: 870px; top: 248px; width: 910px; }
       #olho   { opacity: 0; margin-bottom: 10px; }
       #tit    { opacity: 0; margin-bottom: 46px; }
 
@@ -90,12 +92,15 @@
                  data-start="10.21" data-duration="8.16"></video>
 
           <svg id="pincel" viewBox="0 0 416 900">
-            <!-- laco em volta do item "Projetos sociais" do menu: a caixa do
-                 item e esq 24 / topo 141 / 342x64 em CSS do site, o que da
-                 (26,150)-(390,218) depois do k. O laco abre ~10px em volta. -->
-            <path d="M 20,184 C 20,154 106,143 208,143 C 310,143 396,154 396,184
-                     C 396,214 310,227 208,227 C 106,227 20,214 20,184
-                     C 20,167 58,154 129,147"/>
+            <!-- Laco em volta de "Projetos sociais". A caixa do item no JSON
+                 e esq 24 / topo 141 / 342x64, mas ela atravessa a tela toda
+                 e o rotulo so vai ate x~186 em CSS do site: um laco na caixa
+                 inteira circularia meio vazio. Entao o laco segue o texto
+                 (x 18..222, y 147..225 ja em px da composicao) e so o y vem
+                 do JSON sem mexer. -->
+            <path d="M 18,185 C 18,157 65,147 120,147 C 175,147 222,157 222,185
+                     C 222,213 175,225 120,225 C 65,225 18,213 18,185
+                     C 18,169 39,157 77,151"/>
           </svg>
           <div id="cursor" class="cursor"></div>
         </div>
@@ -130,7 +135,10 @@
       const k = 1.0667;                        // CSS do site -> px da composicao
       const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
       const MENU  = P(353,  33);               // #hamburguer   -> (377, 35)
-      const PROJ  = P(195, 173);               // "Projetos sociais" -> (208, 185)
+      /* O JSON da o centro da CAIXA do item (195,173), mas a caixa ocupa a
+         largura da tela e o rotulo acaba em x~186: um dedo ali cairia depois
+         do texto. O y e o do JSON; o x desce para cima da palavra. */
+      const PROJ  = P(120, 173);               // "Projetos sociais" -> (128, 185)
 
       const tl = gsap.timeline({ paused: true });
 
@@ -165,32 +173,53 @@
       onde = toque(tl, { ...MENU, em: 4.94, vindoDe: onde, aproxima: 0.45 });
       onde = toque(tl, { ...PROJ, em: 6.50, vindoDe: onde, aproxima: 0.55 });
 
-      /* traco de pincel em volta de "Projetos sociais" no instante do toque;
-         fica 1,7s no ar e sai antes de a camera voltar */
-      pincel(tl, "#pincel", 6.50, 1.70);
-      tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 7.30);
+      /* Traco de pincel em volta de "Projetos sociais". Feito a mao em vez de
+         `pincel()` do kit por causa da propria gravacao: o menu da G02 esta
+         no ar ate o quadro 195 (t=6,500) e some de uma vez no 196 (6,533).
+         Um laco com os 1,9s padrao do kit ficaria 1,4s boiando por cima da
+         pagina ja fechada — foi o que apareceu no primeiro contact-sheet.
+         Aqui ele se FECHA em 6,50, em cima da palavra "Projetos", e dissolve
+         crescendo um pouco, como se o toque o absorvesse. Quem segura a
+         enfase depois e o degrau 2 do painel, que sobe em "sociais". */
+      (function () {
+        const p = document.querySelector("#pincel path");
+        const L = p.getTotalLength();
+        p.style.strokeDasharray = L;
+        p.style.strokeDashoffset = L;
+        gsap.set("#pincel", { transformOrigin: "120px 185px" });
+        tl.set("#pincel", { opacity: 1, scale: 1, transformOrigin: "120px 185px" }, 6.10);
+        tl.fromTo(p, { strokeDashoffset: L },
+                     { strokeDashoffset: 0, duration: 0.40, ease: "power2.inOut" }, 6.10);
+        tl.to("#pincel", { opacity: 0, scale: 1.07,
+                           duration: 0.20, ease: "power2.out" }, 6.50);
+      })();
+      tl.to("#cursor", { opacity: 0, duration: 0.22, ease: "power2.out" }, 6.52);
 
       /* degrau 2 sobe em "sociais", logo depois do laco de pincel: a tela
          destaca e o painel escreve — o mesmo conteudo, um depois do outro */
       entra(tl, "#d2", 7.14 - 0.5);
 
-      // volta ao plano aberto bem antes da troca de pagina, para a barra de
-      // endereco ficar limpa quando ela mudar
+      /* Volta ao plano aberto assim que o degrau 2 assenta, e bem antes da
+         troca de pagina: a barra de endereco precisa estar limpa, e com o
+         menu ja fechado nao sobra nada para ver de perto. */
       tl.to("#fone", { scale: 1.00, x: 0, y: 0,
-                       duration: 0.85, ease: "power2.inOut" }, 8.50);
+                       duration: 0.85, ease: "power2.inOut" }, 7.60);
 
       entra(tl, "#d3", 9.90 - 0.5);            // "Filos" 9.90
 
       /* ---------- 10,21: "ABC." — o ponto da cena ------------------------
          A tela troca de pagina (o data-start de #telaAbc faz isso) e a barra
-         de endereco troca junto, numa contagem de tres dentro da mesma
-         palavra: 10.21 a pagina vira, 10.26 o endereco antigo sai, 10.38 o
-         novo entra, 10.85 o subdominio novo respira.                      */
+         de endereco troca no MESMO instante — sao o mesmo evento, navegar, e
+         separa-los faria a barra parecer atrasada. Depois, em 10,85, so o
+         subdominio novo respira, para o olho voltar nele.                  */
       tl.to("#fone", { scale: 1.018, duration: 0.22, ease: "power2.out"   }, 10.21);
       tl.to("#fone", { scale: 1.000, duration: 0.50, ease: "power2.inOut" }, 10.43);
 
-      tl.to("#enderUm",   { opacity: 0, duration: 0.26, ease: "power2.inOut" }, 10.26);
-      tl.to("#enderDois", { opacity: 1, duration: 0.40, ease: "power2.out"   }, 10.38);
+      /* Sem sobreposicao entre as duas barras: a antiga apaga primeiro e a
+         nova entra logo atras. Com as duas no ar ao mesmo tempo o canto
+         ficava embolado por tres quadros. */
+      tl.to("#enderUm",   { opacity: 0, duration: 0.14, ease: "power2.in"  }, 10.21);
+      tl.to("#enderDois", { opacity: 1, duration: 0.30, ease: "power2.out" }, 10.35);
       tl.to("#enderDois", { scale: 1.07, duration: 0.26, ease: "power2.out"   }, 10.85);
       tl.to("#enderDois", { scale: 1.00, duration: 0.46, ease: "power2.inOut" }, 11.11);
 

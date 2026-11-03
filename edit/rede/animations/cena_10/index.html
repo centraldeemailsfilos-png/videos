@@ -1,59 +1,217 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/fontes/fontes.css" />
+    <link rel="stylesheet" href="assets/estilo.css" />
     <style>
-      /* Placeholders: replace all three with the film's own palette and display face. */
-      :root {
-        --ground: #000;
-        --ink: #ffffff;
-        --font-display: sans-serif;
-      }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: var(--ground);
-      }
-      #root {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
-      }
-      #title {
-        color: var(--ink);
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-      }
+      /* Cena 10 — a virada do video, em tres tempos:
+           0 a 8,94   so a frase-tese, sem celular
+           8,94 a 13,58  tres topos trocando em corte rapido
+           13,58 ao fim  o rodape com a rede inteira                   */
+
+      /* ---------- tempo 1: a tese, centralizada e grande ---------- */
+      #tese  { position: absolute; left: 160px; top: 352px; width: 1600px;
+               text-align: center; }
+      #olho1 { font-size: 52px; margin-bottom: 26px; opacity: 0; }
+      #frase { font-size: 118px; line-height: 1.14; }
+      /* inline-block para a entrada poder deslocar cada parte em y;
+         com opacity 0 o espaco ja fica reservado, entao a linha nao
+         se reposiciona quando a parte seguinte aparece */
+      #frase span { display: inline-block; opacity: 0; }
+
+      /* ---------- celular: caixa = conteudo + 2x borda de 9px ----------
+         vídeo 416x900, caixa 434x918. O vídeo tem 390x844 CSS do site e
+         entra escalado por k = 416/390 = 1,0667; toda coordenada vinda do
+         JSON da gravacao passa por esse k.                              */
+      #fone { left: 240px; top: 90px; width: 434px; height: 918px; opacity: 0; }
+      /* as quatro gravacoes se empilham no mesmo lugar; quem mostra uma
+         de cada vez e o data-start de cada <video> */
+      #fone video { position: absolute; left: 0; top: 0; width: 416px; height: 900px; }
+
+      /* o pincel e o cursor moram dentro do celular, para acompanharem a
+         aproximacao da camera em vez de descolarem da tela */
+      #pincel { position: absolute; left: 0; top: 0; width: 416px; height: 900px;
+                opacity: 0; overflow: visible; }
+      #pincel path { fill: none; stroke: var(--ouro); stroke-width: 6;
+                     stroke-linecap: round; filter: url(#aspero); }
+      .cursor { width: 52px; height: 52px; margin: -26px 0 0 -26px; }
+      .cursor::after { inset: 17px; }
+
+      /* ---------- barra de endereco: uma por pagina, empilhadas ----------
+         trocam no mesmo quadro em que a gravacao corta, porque o corte e a
+         troca de endereco sao o mesmo acontecimento */
+      #barras { position: absolute; right: 130px; top: 44px;
+                width: 760px; height: 56px; opacity: 0; }
+      #barras .ender { right: 0; top: 0; }
+
+      /* ---------- tempo 2 e 3: painel a direita ---------- */
+      #painel { position: absolute; left: 870px; top: 236px; width: 910px; }
+      #olho   { opacity: 0; margin-bottom: 12px; }
+      #tit    { opacity: 0; margin-bottom: 48px; }
+      .linha  { opacity: 0; margin-bottom: 30px; padding-left: 26px;
+                border-left: 4px solid var(--linha);
+                font-size: 34px; line-height: 1.4; color: var(--suave); }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      <h1 id="title" class="clip" data-start="0" data-duration="10" data-track-index="0">Title</h1>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="24.22"
+         data-width="1920" data-height="1080">
+      <div id="cena" class="clip">
+        <div class="palco"></div>
+        <div class="vinheta"></div>
+
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+          <filter id="aspero" x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="4"/>
+            <feDisplacementMap in="SourceGraphic" scale="5"/>
+          </filter>
+        </defs></svg>
+
+        <!-- tempo 1 — a frase mais importante do video, sozinha no quadro -->
+        <div id="tese">
+          <p id="olho1" class="mao">O mais importante</p>
+          <h1 id="frase" class="titulo">
+            <span id="t1">Separado</span><br />
+            <span id="t2">não quer dizer</span> <span id="t3"><em>isolado</em>.</span>
+          </h1>
+        </div>
+
+        <div id="barras">
+          <div id="b1" class="ender">filosabc.filoseditora.com.br</div>
+          <div id="b2" class="ender">corrente300.filoseditora.com.br</div>
+          <div id="b3" class="ender">projetosocialangola.filoseditora.com.br</div>
+        </div>
+
+        <div id="fone" class="fone">
+          <!-- cada <video> precisa de id proprio: sem ele a midia nao e
+               descoberta e a tela sai congelada no MP4, sem aviso.
+               O data-start vive no video; o #fone nao tem data-start. -->
+          <video id="t_abc"      src="assets/G11a.mp4" muted
+                 data-start="8.94"  data-duration="1.56"></video>
+          <video id="t_corrente" src="assets/G11b.mp4" muted
+                 data-start="10.50" data-duration="1.56"></video>
+          <video id="t_angola"   src="assets/G11c.mp4" muted
+                 data-start="12.06" data-duration="1.52"></video>
+          <video id="rodape"     src="assets/G12.mp4"  muted
+                 data-start="13.58" data-duration="10.64"></video>
+
+          <!-- a barra de marcas da rede fica em y 51 do CSS do site
+               (chips de x 17 a 349); x k = 1,0667 isso vira y 54,
+               x 18 a 372 em px da composicao — e a elipse abaixo -->
+          <svg id="pincel" viewBox="0 0 416 900">
+            <path d="M 12,54 C 12,33 94,24 196,24 C 298,24 384,33 384,54
+                     C 384,75 298,84 196,84 C 94,84 12,75 12,54
+                     C 12,40 48,31 110,27"/>
+          </svg>
+          <div id="cursor" class="cursor"></div>
+        </div>
+
+        <!-- tempo 2 e 3 — o texto na tela do roteiro -->
+        <div id="painel">
+          <p id="olho" class="mao">Em qualquer uma das três páginas</p>
+          <h2 id="tit" class="titulo">Links separados.<br /><em>Projetos conectados.</em></h2>
+          <p id="l1" class="apoio linha">No topo, a logo da Filos e os outros dois projetos.</p>
+          <p id="l2" class="apoio linha">No fim de cada página, a rede inteira — a um toque.</p>
+        </div>
+      </div>
     </div>
+
+    <script src="assets/kit.js"></script>
     <script>
+      /* Cena 10, 24,22s (188,96s a 213,18s da narracao; aqui tudo local).
+         Tempos do dossie, palavra a palavra:
+           "importante:" 1.87 | "separado" 2.61 | "não" 3.39 | "isolado." 4.16
+           "Em" 5.10 | "três" 7.69 | "páginas," 7.91 | "topo" 8.94
+           "mostra" 9.30 | "logo" 10.38 | "projetos." 12.50 | "fim" 13.58
+           "página," 15.06 | "pessoa" 16.15 | "encontra" 17.46 | "rede" 18.25
+           "Entrou" 19.52 | "toque," 21.65 | "conhece" 22.65            */
+
+      const k = 1.0667;                        // CSS do site -> px da composicao
+      const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
+      // cartao "Corrente 300" do rodape: no quadro assentado da G12 ele vai
+      // de y 360 a 455 e de x 25 a 365 no CSS do site; o centro e (195, 408)
+      const CARTAO = P(195, 408);
+      const POUSO  = { x: CARTAO.x, y: CARTAO.y + 70 };   // de onde o dedo vem
+
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.fromTo("#title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0);
+
+      /* Um dono so para o transform: o CSS nao escala nada, o estado inicial
+         vem de gsap.set + tl.set(...,0), e dai em diante so o GSAP mexe. */
+      gsap.set("#fone", { scale: 1, x: 0, y: 0, opacity: 0 });
+      tl.set("#fone",   { scale: 1, x: 0, y: 0, opacity: 0 }, 0);
+      gsap.set("#barras", { opacity: 0, x: 0 });
+      tl.set("#barras",   { opacity: 0, x: 0 }, 0);
+      tl.set("#b2", { opacity: 0 }, 0);
+      tl.set("#b3", { opacity: 0 }, 0);
+      gsap.set("#cursor", { ...POUSO, scale: 1, opacity: 0 });
+      tl.set("#cursor",   { ...POUSO, scale: 1, opacity: 0 }, 0);
+
+      /* ---------------- tempo 1: a tese ----------------
+         Uma parte por vez, cada uma chegando em cima da sua palavra. A
+         entrada dura 0,5s e comeca 0,5s antes, entao o quadro de chegada
+         cai exatamente na palavra. Nada mais no quadro: e a frase que
+         sustenta o video inteiro e ela precisa de ar.                  */
+      entra(tl, "#olho1", 0.25, 0.60);          // "Agora, o mais importante:"
+      entra(tl, "#t1", 2.11, 0.50);             // "separado"       2.61
+      entra(tl, "#t2", 2.89, 0.50);             // "não quer dizer" 3.39
+      entra(tl, "#t3", 3.66, 0.50);             // "isolado."       4.16
+      // 1,3s de respiro depois de "isolado": uma deriva de 1,5% mantem o
+      // quadro vivo sem puxar o olho para lugar nenhum
+      tl.to("#frase", { scale: 1.015, duration: 1.30, ease: "power2.inOut" }, 4.16);
+      sai(tl, "#tese", 5.50, 0.55);             // sai durante "Em qualquer uma"
+
+      /* ---------------- tempo 2: os topos trocando ----------------
+         O painel se monta antes do celular chegar, para o celular pousar
+         num quadro ja estavel.                                         */
+      entra(tl, "#olho", 6.30, 0.55);           // chega 6.85
+      entra(tl, "#tit",  7.15, 0.54);           // chega 7.69, em "três"
+
+      /* Celular e barra de endereco entram juntos, com o mesmo tween: sao
+         uma coisa so, um navegador chegando. Pousam em 8,94, o mesmo
+         instante em que a G11a comeca — assim a tela nunca aparece preta. */
+      tl.fromTo(["#fone", "#barras"], { opacity: 0, x: -64 },
+                { opacity: 1, x: 0, duration: 0.60, ease: "power3.out" }, 8.34);
+
+      /* O pincel circula a barra de marcas da rede. Fica 8,94 ocupado pela
+         chegada do celular, entao o traco se desenha logo em seguida, sob
+         "mostra" (9,30), e so apaga depois de "projetos." (12,50): a barra
+         e a mesma nas tres paginas, e o traco atravessando os dois cortes
+         e justamente o que diz isso.                                    */
+      pincel(tl, "#pincel", 9.30, 3.70);        // desenha 9,05→9,67, apaga 12,75
+      entra(tl, "#l1", 9.88, 0.50);             // chega 10.38, em "logo"
+
+      /* Cada corte da gravacao troca o endereco no mesmo quadro. O rodape
+         (G12) e a mesma pagina da G11a, entao o endereco volta ao primeiro. */
+      tl.set("#b1", { opacity: 0 }, 10.50);  tl.set("#b2", { opacity: 1 }, 10.50);
+      tl.set("#b2", { opacity: 0 }, 12.06);  tl.set("#b3", { opacity: 1 }, 12.06);
+      tl.set("#b3", { opacity: 0 }, 13.58);  tl.set("#b1", { opacity: 1 }, 13.58);
+
+      /* ---------------- tempo 3: o rodape ----------------
+         O corte para a G12 cai em "fim" (13,58) e a propria gravacao rola
+         ate o rodape entre 14,18 e ~15,9. Nada entra por cima desse
+         movimento; o texto so chega depois que a pagina assenta.        */
+      tl.to("#l1", { opacity: 0.42, duration: 0.55, ease: "power2.inOut" }, 16.90);
+      entra(tl, "#l2", 16.90, 0.56);            // chega 17.46, em "encontra"
+
+      /* Uma unica aproximacao na cena inteira, e ela e aqui: "a rede
+         inteira" em 18,25. Aproxima o celular inteiro, moldura junto —
+         escala 1,28 com deslocamento (20, 100) poe o bloco dos quatro
+         cartoes no centro do quadro, e o celular sangra por baixo, que e
+         como um close funciona. Segura ate o fim.                       */
+      tl.to("#fone", { scale: 1.28, x: 20, y: 100,
+                       duration: 0.65, ease: "power2.inOut" }, 17.60);
+
+      /* "Em um toque, conhece os outros": o dedo toca o cartao de um
+         projeto vizinho. A gravacao nao clica — quem toca e o overlay. */
+      toque(tl, { ...CARTAO, em: 21.65, vindoDe: POUSO, aproxima: 0.60 });
+      tl.to("#cursor", { opacity: 0, duration: 0.40, ease: "power2.inOut" }, 22.60);
+      // de 23,00 ao fim o quadro fica parado nos quatro cartoes: 1,2s de
+      // sustentacao antes do corte para a cena 11
+
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>

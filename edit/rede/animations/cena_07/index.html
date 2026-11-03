@@ -1,59 +1,191 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="./node_modules/gsap/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/fontes/fontes.css" />
+    <link rel="stylesheet" href="assets/estilo.css" />
     <style>
-      /* Placeholders: replace all three with the film's own palette and display face. */
-      :root {
-        --ground: #000;
-        --ink: #ffffff;
-        --font-display: sans-serif;
+      /* Mesma caixa das cenas 2 e 6: conteudo 416x900 + 2x9px de borda = 434x918.
+         O video e 390x844 CSS do site e entra escalado por k = 416/390 = 1,0667;
+         toda coordenada tirada de G07.json passa por esse k. */
+      #fone { left: 240px; top: 90px; width: 434px; height: 918px; }
+      #fone video { width: 416px; height: 900px; }
+      /* a barra de endereco mora no canto superior direito: quando a camera
+         aproxima, o celular sangra para cima e passaria por cima dela */
+      #barra { right: 130px; top: 44px; }
+
+      /* cursor e pinceis moram DENTRO de #fone para acompanharem a camera.
+         O cursor encolhe para 46px (o padrao de 58 cobria o "+" inteiro na
+         aproximacao, e o botao tem so 38px CSS) */
+      .cursor { width: 46px; height: 46px; margin: -23px 0 0 -23px; }
+      .cursor::after { inset: 16px; }
+      #pincel, #pincel2 {
+        position: absolute; left: 0; top: 0; width: 416px; height: 900px;
+        opacity: 0; overflow: visible;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+
+      #painel { position: absolute; left: 870px; top: 214px; width: 910px; }
+      #olho { opacity: 0; margin-bottom: 10px; }
+      #tit  { opacity: 0; margin-bottom: 46px; }
+
+      /* cada item do painel leva uma mini barra dourada: o assunto da cena
+         e a barra de progresso, entao o marcador repete a forma dela */
+      .linha { display: flex; align-items: flex-start; gap: 26px;
+               margin-bottom: 36px; opacity: 0; }
+      .linha .pip { flex: none; width: 62px; height: 16px; border-radius: 8px;
+                    background: var(--ouro); margin-top: 20px; }
+      .linha .q { color: var(--creme); font-size: 46px; font-weight: 700;
+                  line-height: 1.2; }
+
+      /* Exigencia do roteiro (§5 e §8): a etiqueta "Numeros de exemplo" tem de
+         ficar visivel. Ela existe na propria pagina e aparece ate ~15 s; a
+         rolagem para a cozinha a tira de quadro, entao ela e repetida aqui,
+         com as mesmas palavras, antes de sumir la dentro. */
+      #nota {
+        position: absolute; left: 870px; top: 900px; opacity: 0;
+        display: inline-flex; align-items: center;
+        padding: 14px 28px; border: 2px dashed var(--linha); border-radius: 18px;
+        color: var(--ouro-cl); font-size: 32px; font-weight: 600;
       }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: var(--ground);
-      }
-      #root {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
-      }
-      #title {
-        color: var(--ink);
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
-      }
+      #nota b { color: var(--creme); font-weight: 700; }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      <h1 id="title" class="clip" data-start="0" data-duration="10" data-track-index="0">Title</h1>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="23.06"
+         data-width="1920" data-height="1080">
+      <div id="cena" class="clip">
+        <div class="palco"></div>
+        <div class="vinheta"></div>
+
+        <svg width="0" height="0" aria-hidden="true"><defs>
+          <filter id="aspero" x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7"/>
+            <feDisplacementMap in="SourceGraphic" scale="4"/>
+          </filter>
+        </defs></svg>
+
+        <div id="barra" class="ender">corrente300.filoseditora.com.br</div>
+
+        <div id="fone" class="fone">
+          <video id="tela" src="assets/G07.mp4" muted
+                 data-start="0" data-duration="23.06"></video>
+
+          <!-- pincel 1: circula a frase "A parte listrada e voce: ..."
+               (site x 40..308, y 461..505 -> x k) em "pessoa:" 9,49 -->
+          <svg id="pincel" class="pincel" viewBox="0 0 416 900">
+            <path d="M 21,515 C 21,487 95,473 186,473 C 277,473 351,487 351,515
+                     C 351,543 277,557 186,557 C 95,557 21,543 21,515
+                     C 21,499 57,487 118,480"/>
+          </svg>
+
+          <!-- pincel 2: circula a fileira R$ 10 / R$ 20 / R$ 30 da doacao
+               unica (site x 36..333, y 152..203 -> x k) a partir de 21,66 -->
+          <svg id="pincel2" class="pincel" viewBox="0 0 416 900">
+            <path d="M 20,189 C 20,160 99,146 196,146 C 293,146 372,160 372,189
+                     C 372,218 293,232 196,232 C 99,232 20,218 20,189
+                     C 20,172 58,160 124,153"/>
+          </svg>
+
+          <div id="cursor" class="cursor"></div>
+        </div>
+
+        <div id="painel">
+          <p id="olho" class="mao">Metas e progresso</p>
+          <h2 id="tit" class="titulo">Veja o quanto <em>já foi</em><br />e o quanto falta</h2>
+
+          <div class="linha" id="l1"><span class="pip"></span>
+            <span class="q">96 de 300 já têm padrinho</span></div>
+          <div class="linha" id="l2"><span class="pip"></span>
+            <span class="q">204 ainda faltam</span></div>
+          <div class="linha" id="l3"><span class="pip"></span>
+            <span class="q">A parte listrada é a sua escolha</span></div>
+          <div class="linha" id="l4"><span class="pip"></span>
+            <span class="q">A cozinha tem barras próprias</span></div>
+        </div>
+
+        <p id="nota"><b>Números de exemplo</b>&nbsp;— só para ver como fica</p>
+      </div>
     </div>
+
+    <script src="assets/kit.js"></script>
     <script>
+      /* Tempos locais da cena 7 (130,10s..153,17s da narracao), tirados do
+         alinhamento palavra a palavra:
+           "metas." 1.98 | "barra" 2.45 | "padrinho" 5.22 | "faltam." 7.03
+           "listrada" 8.08 | "pessoa:" 9.49 | "escolha" 11.97 | "crescer." 14.04
+           "cozinha," 15.83 | "panelas" 16.95 | "barras" 19.01 | "fazer" 21.66
+         A G07 foi gravada nestes mesmos tempos: a rolagem que comeca em 0,5
+         chega em #metas em 1,98; os dois toques no "+" da barra flutuante
+         caem em 8,067 e 8,767; a rolagem de 14,8 assenta nas metas da cozinha
+         em ~15,8; a de 19,97 chega na doacao unica em ~21,4.               */
+      const k = 1.0667;                       // CSS do site -> px da composicao
+      const P = (x, y) => ({ x: Math.round(x * k), y: Math.round(y * k) });
+      const MAIS = P(108, 798);               // "+" da barra flutuante (G07.json)
+
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.fromTo("#title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0);
+
+      /* A camera e o CELULAR INTEIRO, moldura junto — nunca o conteudo dentro
+         dele, que cortaria a tela no meio da palavra. Escala inicial so em
+         gsap.set + tl.set: o CSS nao toca em transform, para o GSAP ser o
+         unico dono.
+         Enquadramento A (barra principal, escala 1,48 / y -179): entra a
+         etiqueta "Numeros de exemplo" no alto, a barra no meio e o "+" da
+         barra flutuante embaixo — tudo o que a narracao cita entre 2,5 e 12.
+         Enquadramento B (metas da cozinha, escala 1,48 / y -27): os cartoes
+         "Um fogao" e "Talheres" com as barras proprias de cada meta.
+         Sao duas aproximacoes na cena inteira: a cada movimento de camera o
+         olho reassenta, e tres ja seriam demais.                           */
+      gsap.set("#fone", { scale: 1, x: 0, y: 0 });
+      tl.set("#fone", { scale: 1, x: 0, y: 0 }, 0);
+      tl.set("#cursor", { x: MAIS.x, y: MAIS.y + 86, opacity: 0 }, 0);
+
+      entra(tl, "#olho", 0.30);
+      entra(tl, "#tit",  1.48);               // chega em "metas." 1,98
+
+      // aproximacao A: dispara em "barra" 2,45 e assenta em 3,30
+      tl.to("#fone", { scale: 1.48, x: 0, y: -179, duration: 0.85, ease: "power2.inOut" }, 2.45);
+
+      entra(tl, "#l1", 4.72);                 // chega em "padrinho" 5,22
+      entra(tl, "#l2", 6.53);                 // chega em "faltam." 7,03
+
+      /* os dois toques no "+" sao os da propria gravacao: 8,067 cai em
+         "listrada" 8,08 e 8,767 logo depois — e e o toque que faz a parte
+         listrada da barra crescer na tela. */
+      let onde = { x: MAIS.x, y: MAIS.y + 86 };
+      onde = toque(tl, { ...MAIS, em: 8.067, vindoDe: onde, aproxima: 0.70 });
+      onde = toque(tl, { ...MAIS, em: 8.767, vindoDe: onde, aproxima: 0.30 });
+      tl.to("#cursor", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 9.15);
+
+      // "pessoa:" 9,49 — o pincel circula a frase "A parte listrada e voce"
+      pincel(tl, "#pincel", 9.49, 2.0);
+
+      entra(tl, "#l3", 11.47);                // chega em "escolha" 11,97
+
+      // volta ao aberto antes da rolagem da gravacao (14,8)
+      tl.to("#fone", { scale: 1.00, x: 0, y: 0, duration: 0.95, ease: "power2.inOut" }, 12.20);
+
+      /* a etiqueta da pagina sai de quadro na rolagem de 14,8: a nota do
+         painel entra pouco antes, para a informacao nunca faltar */
+      entra(tl, "#nota", 14.05);
+
+      // aproximacao B: dispara em "cozinha," 15,83 e assenta em "panelas" 16,73
+      tl.to("#fone", { scale: 1.48, x: 0, y: -27, duration: 0.90, ease: "power2.inOut" }, 15.83);
+
+      entra(tl, "#l4", 18.51);                // chega em "barras" 19,01
+
+      /* O enquadramento B fica ate o fim ("a partir de 15,8", diz o plano):
+         a rolagem de 19,97 traz o cartao da doacao unica para dentro dele e
+         a fileira R$ 10/20/30 cai no alto do quadro, grande e legivel. Sair
+         para o aberto aqui so encolheria o desfecho — e seria um terceiro
+         movimento de camera. */
+
+      /* "fazer uma doacao unica" 21,66: o pincel circula R$ 10 / 20 / 30 e
+         fica ate o fim — o quadro final segura ~1 s sem nada novo. */
+      pincel(tl, "#pincel2", 21.66, 2.5);
+
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>
