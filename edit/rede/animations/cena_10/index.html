@@ -174,12 +174,11 @@
       entra(tl, "#olho", 6.30, 0.55);           // chega 6.85
       entra(tl, "#tit",  7.15, 0.54);           // chega 7.69, em "três"
 
-      /* Celular e barra de endereco entram juntos, com o mesmo tween: sao
-         uma coisa so, um navegador chegando. Pousam em 8,94, o mesmo
-         instante em que a G11a comeca — assim a tela nunca aparece preta. */
-      /* o deslocamento assenta cedo (power3.out) e a opacidade sobe tarde
-         (power3.in): assim o celular so fica solido no quadro em que a
-         G11a comeca, e a tela nunca aparece apagada */
+      /* Celular e barra de endereco entram juntos: sao uma coisa so, um
+         navegador chegando. Pousam em 8,94, o mesmo instante em que a
+         G11a comeca. O deslocamento assenta cedo (power3.out) e a
+         opacidade sobe tarde (power3.in), entao o celular so fica solido
+         no quadro em que a gravacao acende — a tela nunca aparece vazia. */
       tl.fromTo(["#fone", "#barras"], { x: -64 },
                 { x: 0, duration: 0.60, ease: "power3.out" }, 8.34);
       tl.fromTo(["#fone", "#barras"], { opacity: 0 },
